@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div align="center">
+	<h1>Jnana - Elearning Platform</h1>
+	
+	<h3 style="color:green" th:text="${session.pass}"></h3>
+	<h3 style="color:red" th:text="${session.fail}"></h3>
+	<span th:text="${@generalService.removeMessage()}"></span>
+	
+	<a href="/login"> <button>Login</button></a>
+	<a href="/register"><button>Register</button></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div align="center">
+
+		<h3 style="color: green" th:text="${session.pass}"></h3>
+		<h3 style="color: red" th:text="${session.fail}"></h3>
+		<span th:text="${@generalService.removeMessage()}"></span>
+
+		<form action="/submit-otp" method="post">
+			Enter OTP: <input type="number" name="otp">
+			<button>Submit</button>
+		</form>
+
+		<a href="/resend-otp">
+			<button>Resend OTP</button>
+		</a>
+	</div>
+</body>
+</html>
