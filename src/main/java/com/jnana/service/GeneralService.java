@@ -1,5 +1,7 @@
 package com.jnana.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class GeneralService {
 	@Autowired
 	TemplateEngine templateEngine;
 
+	@Value("${OTP_TIME}")
+	long otpTime;
+
 	@Value("${spring.mail.username}")
 	private String email;
 
@@ -66,11 +71,10 @@ public class GeneralService {
 
 		if (!result.hasErrors()) {
 			int otp = new Random().nextInt(100000, 1000000);
-			session.setMaxInactiveInterval(60);
 			session.setAttribute("otp", otp);
 			session.setAttribute("userDto", userDto);
 			sendEmail(otp, userDto);
-
+			session.setAttribute("time", LocalDateTime.now());
 			session.setAttribute("pass", "Otp Sent Success");
 			return "redirect:/otp";
 		}
@@ -78,9 +82,14 @@ public class GeneralService {
 	}
 
 	public String confirmOtp(int otp, HttpSession session) {
-		try {
+		LocalDateTime createdTime = (LocalDateTime) session.getAttribute("time");
+		LocalDateTime curretTime = LocalDateTime.now();
+
+		long seconds = Duration.between(createdTime, curretTime).getSeconds();
+		if (seconds <= otpTime) {
 			int sessionOtp = (int) session.getAttribute("otp");
 			UserDto userDto = (UserDto) session.getAttribute("userDto");
+
 			if (sessionOtp == otp) {
 				if (userDto.getType() == AccountType.TUTOR) {
 					Tutor tutor = new Tutor();
@@ -105,12 +114,12 @@ public class GeneralService {
 				session.setAttribute("fail", "Invalid Otp Try Again");
 				return "redirect:/otp";
 			}
-		} catch (NullPointerException e) {
-			session.setAttribute("fail", "Otp Expired, Try Again");
-			return "redirect:/register";
+		} else {
+			session.setAttribute("fail", "Otp Expired at Try Resending OTP ");
+			return "redirect:/otp";
 		}
 	}
-	
+
 	void sendEmail(int otp, UserDto userDto) {
 
 		MimeMessage message = mailSender.createMimeMessage();
@@ -131,7 +140,6 @@ public class GeneralService {
 
 			mailSender.send(message);
 		} catch (Exception e) {
-			System.out.println("Failed to Send OTP : " + otp);
 			System.err.println("Failed to Send OTP : " + otp);
 		}
 
@@ -150,7 +158,7 @@ public class GeneralService {
 	public String resendOtp(HttpSession session) {
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		int otp = new Random().nextInt(100000, 1000000);
-		session.setMaxInactiveInterval(60);
+		session.setMaxInactiveInterval(40);
 		session.setAttribute("otp", otp);
 		session.setAttribute("userDto", userDto);
 		sendEmail(otp, userDto);
