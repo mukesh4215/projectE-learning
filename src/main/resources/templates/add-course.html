@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Login - Jnana</title>
+    <title>Add Course - Jnana</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -35,7 +35,7 @@
             border-radius: 20px;
             box-shadow: 0 15px 30px var(--shadow-color);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             animation: fadeIn 0.5s ease-out;
         }
 
@@ -62,25 +62,41 @@
             color: var(--text-color);
         }
 
-        input[type="email"],
-        input[type="password"] {
+        input[type="text"], textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
         }
 
-        input[type="email"]:focus,
-        input[type="password"]:focus {
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        input[type="text"]:focus, textarea:focus {
             border-color: var(--secondary-color);
             outline: none;
         }
 
-        button {
-            background: var(--primary-color);
-            color: white;
+        .radio-group {
+            margin: 1rem 0;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn {
             padding: 14px 35px;
             border: none;
             border-radius: 30px;
@@ -88,15 +104,33 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 500;
-            width: 100%;
-            margin-top: 1rem;
+            text-decoration: none;
+            letter-spacing: 0.5px;
             filter: brightness(1.1); /* Applied brightness to the button directly */
         }
 
-        button:hover {
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            /* No additional brightness on hover for a consistent look */
+            /* Removed any additional brightness on hover for a consistent look without extra hover action */
+        }
+
+        .error {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
 
         .toast {
@@ -129,24 +163,41 @@
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
-        
+        <h1>Add Course</h1>
+
         <div id="successToast" class="toast success" th:if="${session.pass}" th:text="${session.pass}"></div>
         <div id="errorToast" class="toast error" th:if="${session.fail}" th:text="${session.fail}"></div>
         <th:block th:text="${@generalService.removeMessage()}"></th:block>
 
-        <form action="/login" method="post">
+        <form action="/tutor/add-course" method="post" th:object="${courseDto}">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <label>Title</label>
+                <input type="text" th:field="*{title}">
+                <span class="error" th:errors="*{title}"></span>
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <label>Description</label>
+                <textarea th:field="*{description}"></textarea>
+                <span class="error" th:errors="*{description}"></span>
             </div>
 
-            <button type="submit">Login</button>
+            <div class="form-group">
+                <label>Type</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" th:field="*{paid}" value="true">
+                        Paid
+                    </label>
+                    <label>
+                        <input type="radio" th:field="*{paid}" value="false">
+                        Free
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Course</button>
+            <a href="/tutor/courses" class="btn btn-secondary">Back</a>
         </form>
     </div>
 
