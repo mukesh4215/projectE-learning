@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage Questions - Jnana</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --text-color: #2c3e50;
-            --shadow-color: rgba(0,0,0,0.1);
-            --error-color: #f44336;
+            /* Colors from the Register page */
+            --primary-color: #55E6C1; /* Bright Seafoam Green - vibrant accent */
+            --secondary-color: #87CEEB; /* Light Blue - complementary accent/button hover */
+            --background-light: #E0FFFF; /* Very pale blue/light cyan for background */
+            --card-background: #FFFFFF; /* Pure white for the form card */
+            --text-dark: #3A3A3A; /* Dark gray for main text */
+            --text-muted: #6C757D; /* Muted gray for placeholders/secondary text */
+            --border-color: #B0E0E6; /* Pale blue for borders */
+            --shadow-color: rgba(0,0,0,0.1); /* Soft shadow */
+            --error-color: #DC3545; /* Standard red for errors */
+            --success-color: #28A745; /* Standard green for success */ /* Keeping this as it's a good standard green */
         }
 
         * {
@@ -21,23 +27,27 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            /* Gentle gradient from pale blue to a slightly darker shade, same as Register page */
+            background: linear-gradient(135deg, var(--background-light) 0%, #CCEEFF 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow-y: auto; /* Allow scrolling if content overflows */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         .container {
-            background: white;
+            background: var(--card-background); /* White card background */
             padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px var(--shadow-color);
+            border-radius: 15px; /* Softer corners, same as Register page */
+            box-shadow: 0 10px 25px var(--shadow-color); /* Soft shadow */
             width: 90%;
             max-width: 800px;
             text-align: center;
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.6s ease-out; /* Smooth fade-in, same as Register page */
+            border: 1px solid var(--border-color); /* Subtle light blue border */
         }
 
         @keyframes fadeIn {
@@ -46,10 +56,11 @@
         }
 
         h1 {
-            color: var(--text-color);
+            color: var(--text-dark); /* Dark gray for heading */
             margin-bottom: 2rem;
             font-size: 2.5rem;
             font-weight: 600;
+            letter-spacing: -0.02em; /* Added from Register page */
         }
 
         .btn-group {
@@ -61,25 +72,39 @@
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 14px 30px; /* Slightly adjusted padding for consistency */
             border: none;
-            border-radius: 30px;
-            font-size: 1rem;
+            border-radius: 25px; /* Slightly less rounded, same as Register button */
+            font-size: 1.1rem; /* Adjusted font size, same as Register button */
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
+            transition: all 0.25s ease-in-out; /* Smoother transition */
+            font-weight: 600; /* Adjusted font weight, same as Register button */
             text-decoration: none;
             color: white;
-            background: var(--secondary-color);
+            background: var(--secondary-color); /* Light blue for default button */
         }
 
         .btn-primary {
-            background: var(--primary-color);
+            background: var(--primary-color); /* Seafoam green for primary button */
         }
 
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transform: translateY(-2px); /* Gentle lift */
+            box-shadow: 0 8px 18px rgba(85, 230, 193, 0.25); /* Subtle seafoam shadow */
+            /* Default hover applies to all buttons, including .btn-primary */
+            /* .btn-primary will specifically change its background on hover below */
+        }
+
+        /* Specific hover for the primary button */
+        .btn-primary:hover {
+            background: var(--secondary-color); /* Light blue on hover for primary button */
+            box-shadow: 0 8px 18px rgba(85, 230, 193, 0.25); /* Keep seafoam shadow for primary hover */
+        }
+
+        /* Specific hover for the non-primary buttons (View All Questions, Back) */
+        .btn:not(.btn-primary):hover {
+            background: #6BA2C4; /* A slightly darker blue than --secondary-color for non-primary buttons on hover */
+            box-shadow: 0 8px 18px rgba(135, 206, 235, 0.25); /* Subtle light blue shadow */
         }
 
         .toast {
@@ -87,26 +112,70 @@
             top: 20px;
             right: 20px;
             padding: 1rem 2rem;
-            border-radius: 12px;
+            border-radius: 10px; /* Slightly less rounded */
             color: white;
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s ease-out; /* Adjusted transition for toast */
             transform: translateX(100%);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px var(--shadow-color); /* Soft shadow */
             z-index: 1000;
+            font-weight: 500; /* Adjusted font weight */
         }
 
         .toast.success {
-            background: var(--primary-color);
+            background: var(--success-color); /* Standard green for success */
         }
 
         .toast.error {
-            background: var(--error-color);
+            background: var(--error-color); /* Standard red for error */
         }
 
         .toast.show {
             opacity: 1;
             transform: translateX(0);
+        }
+
+        /* --- Media Queries for Responsiveness --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2.2rem;
+                max-width: 95%;
+            }
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.8rem;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .btn-group {
+                gap: 0.8rem;
+            }
+            .toast {
+                top: 15px;
+                right: 15px;
+                left: 15px;
+                padding: 0.8rem 1.2rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 1.2rem;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+            .btn-group {
+                flex-direction: column; /* Stack buttons on very small screens */
+            }
         }
     </style>
 </head>
@@ -135,7 +204,7 @@
                     toast.classList.add('show');
                     setTimeout(() => {
                         toast.classList.remove('show');
-                    }, 2000);
+                    }, 3000); // Changed to 3 seconds for consistency with the register page
                 }
             });
         }
