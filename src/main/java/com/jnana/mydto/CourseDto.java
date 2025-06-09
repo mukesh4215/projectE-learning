@@ -12,4 +12,6 @@ public class CourseDto {
 	private String description;
 	@NotNull(message = "* Select Any One")
 	private boolean paid;
+	@Size(min = 5, max = 500, message = "* Questions Should be 5~500 charecters")
+	private String questions;
 }

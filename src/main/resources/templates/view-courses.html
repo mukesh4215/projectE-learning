@@ -173,9 +173,10 @@
                     <span class="badge badge-paid" th:if="${course.paid}">Paid</span>
                     <span class="badge badge-free" th:if="${!course.paid}">Free</span>
                 </td>
-                <td>
-                    <button class="btn btn-primary">Publish</button>
-                </td>
+                <td th:if="${!course.published}"><a
+					th:href="'/tutor/publish/'+${course.id}"><button
+							class="btn btn-primary">Publish</button></a></td>
+				<td th:if="${course.published}">Published</td>
             </tr>
         </table>
 

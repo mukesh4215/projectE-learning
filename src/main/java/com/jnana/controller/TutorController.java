@@ -38,11 +38,6 @@ public class TutorController {
 		return tutorService.loadSections(session);
 	}
 
-	@GetMapping("/questions")
-	public String loadQuestions(HttpSession session) {
-		return tutorService.loadQuestions(session);
-	}
-
 	@GetMapping("/learners")
 	public String loadLearners(HttpSession session) {
 		return tutorService.loadLearners(session);
@@ -74,8 +69,13 @@ public class TutorController {
 	}
 
 	@PostMapping("/add-section")
-	public String addSection(@ModelAttribute @Valid SectionDto sectionDto, BindingResult result, HttpSession session) {
-		return tutorService.addSection(sectionDto, result, session);
+	public String addSection(@ModelAttribute @Valid SectionDto sectionDto, BindingResult result,Model model, HttpSession session) {
+		return tutorService.addSection(sectionDto, result, model, session);
 	}
-}
+	
+	@GetMapping("/view-sections")
+	public String viewSections(HttpSession session, Model model) {
+		return tutorService.viewSections(session, model);
+	}
+ }
 

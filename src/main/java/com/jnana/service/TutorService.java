@@ -1,6 +1,11 @@
 package com.jnana.service;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.jnana.model.Course;
+import com.jnana.model.QuizQuestion;
 import com.jnana.model.Section;
 import com.jnana.model.Tutor;
 import com.jnana.mydto.CourseDto;
@@ -21,12 +29,16 @@ import jakarta.validation.Valid;
 
 @Service
 public class TutorService {
+
+	@Autowired
+	Cloudinary cloudinary;
+
 	@Autowired
 	CourseRepository courseRepository;
-	
+
 	@Autowired
 	SectionRepository sectionRepository;
-	
+
 	public String loadHome(HttpSession session) {
 		if (session.getAttribute("tutor") != null) {
 			return "tutor-home.html";
@@ -71,7 +83,7 @@ public class TutorService {
 			return "redirect:/login";
 		}
 	}
-	
+
 	public String addCourse(HttpSession session, Model model, CourseDto courseDto) {
 		if (session.getAttribute("tutor") != null) {
 			model.addAttribute("courseDto", courseDto);
@@ -92,6 +104,11 @@ public class TutorService {
 				course.setPaid(courseDto.isPaid());
 				course.setDescription(courseDto.getDescription());
 				course.setTutor((Tutor) session.getAttribute("tutor"));
+
+				List<QuizQuestion> questions = Arrays.stream(courseDto.getQuestions().split("\\?"))
+						.map(x -> new QuizQuestion(x)).collect(Collectors.toList());
+				course.setQuizQuestions(questions);
+
 				courseRepository.save(course);
 				session.setAttribute("pass", "Course Added Success");
 				return "redirect:/tutor/courses";
@@ -118,11 +135,14 @@ public class TutorService {
 			return "redirect:/login";
 		}
 	}
-	
+
 	public String publishCourse(Long id, HttpSession session) {
 		if (session.getAttribute("tutor") != null) {
 			Course course = courseRepository.findById(id).orElseThrow();
-
+			if (course.isPublished()) {
+				session.setAttribute("pass", "Course Already Published");
+				return "redirect:/tutor/courses";
+			}
 			List<Section> sections = sectionRepository.findByCourse(course);
 
 			if (course.getQuizQuestions().isEmpty() || sections.isEmpty()) {
@@ -130,7 +150,8 @@ public class TutorService {
 				return "redirect:/tutor/view-courses";
 			} else {
 				course.setPublished(true);
-				session.setAttribute("success", "Course Published Success");
+				courseRepository.save(course);
+				session.setAttribute("pass", "Course Published Success");
 				return "redirect:/tutor/courses";
 			}
 		} else {
@@ -157,17 +178,25 @@ public class TutorService {
 		}
 	}
 
-	public String addSection(@Valid SectionDto sectionDto, BindingResult result, HttpSession session) {
+	public String addSection(@Valid SectionDto sectionDto, BindingResult result, Model model, HttpSession session) {
 		if (session.getAttribute("tutor") != null) {
-			if (result.hasErrors())
+			if (result.hasErrors()) {
+				List<Course> courses = courseRepository.findByTutor((Tutor) session.getAttribute("tutor"));
+				model.addAttribute("courses", courses);
 				return "add-section.html";
-			else {
+			} else {
+				Tutor tutor = (Tutor) session.getAttribute("tutor");
 				Course course = courseRepository.findById(sectionDto.getCourseId()).orElseThrow();
 				Section section = new Section();
 				section.setCourse(course);
 				section.setTitle(sectionDto.getTitle());
-				section.setNotesUrl(saveNotes(sectionDto.getNotes()));
-				section.setVideoUrl(saveVideo(sectionDto.getVideo()));
+				section.setNotesUrl(saveNotes(sectionDto.getNotes(), tutor.getName(), section.getTitle()));
+				section.setVideoUrl(saveVideo(sectionDto.getVideo(), tutor.getName(), section.getTitle()));
+
+				List<QuizQuestion> questions = Arrays.stream(sectionDto.getQuestions().split("\\?"))
+						.map(x -> new QuizQuestion(x)).collect(Collectors.toList());
+				section.setQuizQuestions(questions);
+
 				sectionRepository.save(section);
 				session.setAttribute("pass", "Section Added Success");
 				return "redirect:/tutor/sections";
@@ -178,12 +207,66 @@ public class TutorService {
 		}
 	}
 
-	String saveVideo(MultipartFile multipartFile) {
-		return "";
+	String saveVideo(MultipartFile multipartFile, String tutor, String section) {
+		try {
+			String originalFilename = multipartFile.getOriginalFilename();
+			String extension = originalFilename != null && originalFilename.contains(".")
+					? originalFilename.substring(originalFilename.lastIndexOf('.'))
+					: ".mp4";
+
+			String uniqueId = UUID.randomUUID().toString();
+
+			Map uploadResult = cloudinary.uploader().upload(multipartFile.getBytes(),
+					ObjectUtils.asMap("resource_type", "video", "public_id",
+							"elearning/videos/" + tutor + "_" + section + "_" + uniqueId, "format",
+							extension.replace(".", "")));
+
+			return (String) uploadResult.get("url");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	String saveNotes(MultipartFile multipartFile) {
-		return "";
+	String saveNotes(MultipartFile multipartFile, String tutor, String section) {
+		try {
+			String originalFilename = multipartFile.getOriginalFilename();
+			String extension = originalFilename != null && originalFilename.contains(".")
+					? originalFilename.substring(originalFilename.lastIndexOf('.'))
+					: ".pdf";
+
+			String uniqueId = UUID.randomUUID().toString();
+
+			Map uploadResult = cloudinary.uploader().upload(multipartFile.getBytes(),
+					ObjectUtils.asMap("resource_type", "raw", "public_id",
+							"elearning/notes/" + tutor + "_" + section + "_" + uniqueId, "format",
+							extension.replace(".", "")));
+
+			return (String) uploadResult.get("url");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public String viewSections(HttpSession session, Model model) {
+		if (session.getAttribute("tutor") != null) {
+			List<Course> courses = courseRepository.findByTutor((Tutor) session.getAttribute("tutor"));
+			List<Section> sections = sectionRepository.findByCourseIn(courses);
+
+			if (sections.isEmpty()) {
+				session.setAttribute("fail", "No Sections Added Yet");
+				return "redirect:/tutor/sections";
+			} else {
+				model.addAttribute("sections", sections);
+				return "view-sections.html";
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
 	}
 
 }

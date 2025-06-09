@@ -195,6 +195,11 @@
                     </label>
                 </div>
             </div>
+            Enter Quiz Questions
+			<textarea rows="5" cols="30" th:field="*{questions}">
+            	
+            </textarea>
+			<span class="error" th:errors="*{questions}"></span>
 
             <button type="submit" class="btn btn-primary">Add Course</button>
             <a href="/tutor/courses" class="btn btn-secondary">Back</a>

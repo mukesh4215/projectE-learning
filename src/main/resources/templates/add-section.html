@@ -150,6 +150,8 @@
                 <select name="courseId" id="courseId">
                     <option th:each="course:${courses}" th:value="${course.id}" th:text="${course.title}"></option>
                 </select>
+                Enter Quiz Questions
+			<textarea rows="5" cols="30" th:field="*{questions}"></textarea>
             </div>
 
             <div class="button-group">
