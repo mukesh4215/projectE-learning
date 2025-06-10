@@ -10,7 +10,8 @@
             --secondary-color: #87cefa; /* Brighter Light Blue (LightSkyBlue) */
             --text-color: #2c3e50;
             --shadow-color: rgba(0,0,0,0.1);
-            --error-color: #f44336;
+            --error-color: #f44336; /* Existing error color, suitable for logout */
+            --logout-color: #f44336; /* Using the error color for logout for consistency */
         }
 
         * {
@@ -35,6 +36,7 @@
             max-width: 1200px;
             margin: 20px auto;
             animation: fadeIn 0.5s ease-out;
+            text-align: center; /* Center the buttons */
         }
 
         @keyframes fadeIn {
@@ -61,15 +63,26 @@
             text-decoration: none;
             letter-spacing: 0.5px;
             color: white;
-            background: var(--secondary-color);
+            background: var(--secondary-color); /* Default button color */
             display: inline-block;
-            filter: brightness(1.1); /* Applied brightness to the button directly */
+            filter: brightness(1.1);
+            margin: 0.5rem; /* Add some margin between buttons */
         }
 
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            /* Removed any additional brightness on hover for a consistent look without extra hover action */
+        }
+
+        /* New style for the Logout button */
+        .btn-logout {
+            background: var(--logout-color); /* Use the defined logout color */
+            filter: brightness(1.1); /* Maintain brightness filter */
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         .toast {
@@ -102,20 +115,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Learner Dashboard</h1>
+		<h1>Learner Dashboard</h1>
 
-        <div id="successToast" class="toast success" th:if="${session.pass}" th:text="${session.pass}"></div>
-        <div id="errorToast" class="toast error" th:if="${session.fail}" th:text="${session.fail}"></div>
-        <th:block th:text="${@generalService.removeMessage()}"></th:block>
+		<div id="successToast" class="toast success" th:if="${session.pass}"
+			th:text="${session.pass}"></div>
+		<div id="errorToast" class="toast error" th:if="${session.fail}"
+			th:text="${session.fail}"></div>
+		<th:block th:text="${@generalService.removeMessage()}"></th:block>
 
-        <a href="/logout" class="btn">Logout</a>
-    </div>
+		<a href="/learner/view-courses" class="btn">See Available Courses</a>
+        <a href="#" class="btn">View Enrolled Courses</a>
+        <a href="#" class="btn">View Completed Courses</a>
+        <a href="/logout" class="btn btn-logout">Logout</a>
+	</div>
 
     <script>
         function showToast() {
             const successToast = document.getElementById('successToast');
             const errorToast = document.getElementById('errorToast');
-            
+
             [successToast, errorToast].forEach(toast => {
                 if (toast && toast.textContent.trim() !== '') {
                     toast.classList.add('show');

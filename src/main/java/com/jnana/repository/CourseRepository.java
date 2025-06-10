@@ -9,4 +9,7 @@ import com.jnana.model.Tutor;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 	List<Course> findByTutor(Tutor attribute);
+	
+	List<Course> findByPublishedTrue();
+
 }
