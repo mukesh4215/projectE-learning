@@ -1,5 +1,6 @@
 package com.jnana.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -9,8 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.jnana.model.Course;
+import com.jnana.model.EnrolledCourse;
+import com.jnana.model.EnrolledSection;
 import com.jnana.model.Learner;
+import com.jnana.model.Section;
 import com.jnana.repository.CourseRepository;
+import com.jnana.repository.EnrolledCourseRepository;
+import com.jnana.repository.LearnerRepository;
+import com.jnana.repository.SectionRepository;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -21,6 +28,15 @@ import jakarta.servlet.http.HttpSession;
 public class LearnerService {
 	@Autowired
 	CourseRepository courseRepository;
+	
+	@Autowired
+	EnrolledCourseRepository enrolledCourseRepository;
+	
+	@Autowired
+	LearnerRepository learnerRepository;
+	
+	@Autowired
+	SectionRepository sectionRepository;
 
 	@Value("${razor-pay.api.key}")
 	String key;
@@ -72,7 +88,7 @@ public class LearnerService {
 					model.addAttribute("orderId", orderId);
 					model.addAttribute("amount", amount * 100);
 					model.addAttribute("currency", "INR");
-					model.addAttribute("learner", learner);
+					model.addAttribute("leaner", learner);
 					model.addAttribute("key", key);
 
 					return "payment.html";
@@ -84,10 +100,59 @@ public class LearnerService {
 				}
 
 			} else {
+
+				List<Section> sections = sectionRepository.findByCourse(course);
+				List<EnrolledSection> enrolledSections = new ArrayList<EnrolledSection>();
+				for (Section section : sections) {
+					EnrolledSection enrolledSection = new EnrolledSection();
+					enrolledSection.setSection(section);
+					enrolledSections.add(enrolledSection);
+				}
+
+				EnrolledCourse enrolledCourse = new EnrolledCourse();
+				enrolledCourse.setCourse(course);
+				enrolledCourse.setEnrolledSections(enrolledSections);
+
+				learner.getEnrolledCourses().add(enrolledCourse);
+
+				learnerRepository.save(learner);
+
 				session.setAttribute("pass", "Courses Enrolled Success, Thanks " + learner.getName());
+				session.setAttribute("learner", learnerRepository.findById(learner.getId()).get());
 				return "redirect:/learner/home";
 			}
 
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	public String viewEnrolledCourses(HttpSession session, Model model) {
+		if (session.getAttribute("learner") != null) {
+			Learner learner = (Learner) session.getAttribute("learner");
+
+			List<EnrolledCourse> enrolledCourses = learner.getEnrolledCourses();
+			if (enrolledCourses.isEmpty()) {
+				session.setAttribute("fail", "Not Enrolled for Any of the Courses");
+				return "redirect:/learner/home";
+			} else {
+				model.addAttribute("enrolledCourses", enrolledCourses);
+				return "view-enrolled-courses.html";
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	public String viewEnrolledSections(HttpSession session, Long id, Model model) {
+		if (session.getAttribute("learner") != null) {
+			EnrolledCourse enrolledCourse = enrolledCourseRepository.findById(id).get();
+			List<EnrolledSection> enrolledSections = enrolledCourse.getEnrolledSections();
+
+			model.addAttribute("enrolledSections", enrolledSections);
+			return "view-enrolled-sections.html";
 		} else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";

@@ -150,9 +150,12 @@
                 </td>
                 <td th:if="${!course.paid}">Free</td>
                 <td th:if="${course.paid}">199 &#8377;</td>
-                <td>
-                    <a th:href="'/learner/enroll/'+${course.id}" class="btn btn-primary">Enroll</a>
-                </td>
+                <td th:if="${!session.learner.checkCourse(course.id)}"><a
+					th:href="'/learner/enroll/'+${course.id}">
+						<button>Enroll</button>
+				</a></td>
+				<td th:if="${session.learner.checkCourse(course.id)}">Already
+					Enrolled</td>
             </tr>
         </table>
 

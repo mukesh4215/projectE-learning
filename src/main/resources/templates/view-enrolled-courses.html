@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Enrolled Courses - Jnana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #7fffd4; /* Brighter Seafoam Green (Aquamarine) */
+            --secondary-color: #87cefa; /* Brighter Light Blue (LightSkyBlue) */
+            --text-color: #2c3e50;
+            --shadow-color: rgba(0,0,0,0.1);
+            --error-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Aligns content to the top */
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px var(--shadow-color);
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease-out;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden; /* Ensures rounded corners apply to content */
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: var(--text-color);
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Button base styling */
+        .btn {
+            padding: 10px 20px; /* Increased padding for more space around text */
+            border: none;
+            border-radius: 30px; /* More rounded corners */
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            color: white;
+            text-decoration: none; /* Remove underline for anchor buttons */
+            display: inline-block; /* Allows padding and width to be applied to anchor buttons */
+            filter: brightness(1.1); /* Slightly brighter on hover */
+            white-space: nowrap; /* Prevent text wrapping inside buttons */
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Grouping for buttons in a cell */
+        .btn-group {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+            justify-content: flex-start; /* Align buttons to the left */
+            flex-wrap: wrap; /* Allows buttons to wrap to next line if needed */
+        }
+
+        /* Responsive table adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem; /* Adjust padding for smaller screens */
+            }
+            .container {
+                padding: 1rem;
+                margin-top: 1rem;
+            }
+
+            table {
+                display: block; /* Make table a block to enable overflow scrolling */
+                overflow-x: auto; /* Enable horizontal scrolling */
+                white-space: nowrap; /* Prevents cells from wrapping and keeps them in a single row for scrolling */
+            }
+
+            table {
+                width: 100%;
+                /* Minimum width to ensure enough space for content and buttons, forcing scroll if needed */
+                min-width: 750px; 
+            }
+
+            th, td {
+                padding: 0.8rem; /* Slightly reduce padding on smaller screens */
+            }
+
+            /* Adjust button group for smaller screens if they need to stack more aggressively */
+            .btn-group {
+                flex-direction: column; /* Stack buttons vertically */
+                gap: 8px; /* Slightly less gap when stacked */
+                align-items: stretch; /* Make buttons fill available width when stacked */
+                justify-content: center; /* Center horizontally if they wrap */
+            }
+
+            /* Ensure buttons themselves take full width when stacked */
+            .btn {
+                width: 100%; /* Make buttons fill available width */
+                text-align: center; /* Center text within stacked buttons */
+            }
+        }
+
+        /* For very small screens where even stacked buttons might be too wide or need specific handling */
+        @media (max-width: 480px) {
+            .btn {
+                padding: 8px 15px; /* Slightly smaller padding for very small screens */
+                font-size: 0.8rem; /* Slightly smaller font size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Enrolled Courses</h1>
+
+        <th:block th:if="${#lists.isEmpty(enrolledCourses)}">
+            <p>You haven't enrolled in any courses yet. Explore our <a href="/learner/courses">available courses</a>!</p>
+        </th:block>
+        <th:block th:unless="${#lists.isEmpty(enrolledCourses)}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course Title</th>
+                        <th>Course Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="enrolledCourse:${enrolledCourses}">
+                        <td th:text="${enrolledCourse.course.title}"></td>
+                        <td th:text="${enrolledCourse.course.description}"></td>
+                        <td>
+                            <div class="btn-group">
+                                <a th:href="'/learner/view-enrolled-sections/'+${enrolledCourse.id}" class="btn btn-primary">View Content</a>
+                                <a href="#" class="btn btn-secondary">Take Quiz</a>
+                                <a href="#" class="btn btn-secondary">View Certificate</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
+
+        <br>
+        <a href="/learner/home" class="btn btn-secondary">Back to Home</a>
+    </div>
+</body>
+</html>

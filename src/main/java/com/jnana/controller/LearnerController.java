@@ -31,4 +31,14 @@ public class LearnerController {
 	public String enrollCourse(HttpSession session, @PathVariable Long id,Model model) {
 		return learnerService.enrollCourse(session, id,model);
 	}
+	
+	@GetMapping("/enrolled-courses")
+	public String viewEnrolledCourses(HttpSession session, Model model) {
+		return learnerService.viewEnrolledCourses(session, model);
+	}
+
+	@GetMapping("/view-enrolled-sections/{id}")
+	public String viewEnrolledSections(HttpSession session, @PathVariable Long id, Model model) {
+		return learnerService.viewEnrolledSections(session, id, model);
+	}
 }
