@@ -90,7 +90,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 500;
             color: white;
-            text-decoration: none;
+            text-decoration: none; /* Ensure all general buttons don't have underline */
             display: inline-block;
             filter: brightness(1.1);
             white-space: nowrap; /* Prevent text wrapping inside buttons */
@@ -116,6 +116,38 @@
             justify-content: flex-start; /* Align buttons to the left */
             flex-wrap: wrap; /* Allows buttons to wrap if needed */
         }
+
+        /* Specific styles for the "View", "Download", and "Take Quiz" buttons */
+        .btn-action {
+            padding: 8px 16px; /* Slightly smaller padding for in-table buttons */
+            border-radius: 20px; /* More rounded look for these buttons */
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+            transition: all 0.3s ease;
+            filter: brightness(1.05); /* Slightly brighter by default */
+            text-decoration: none; /* REMOVES THE UNDERLINE */
+        }
+
+        .btn-view {
+            background-color: #28a745; /* Green for View */
+        }
+
+        .btn-download {
+            background-color: #007bff; /* Blue for Download */
+        }
+
+        .btn-quiz {
+            background-color: #ffc107; /* Yellow/Orange for Take Quiz */
+            color: var(--text-color); /* Darker text for better contrast on yellow */
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            filter: brightness(1.15); /* Even brighter on hover */
+        }
+
 
         /* Responsive table adjustments */
         @media (max-width: 768px) {
@@ -187,13 +219,19 @@
                     <tr th:each="enrolledSection:${enrolledSections}">
                         <td th:text="${enrolledSection.section.title}"></td>
                         <td>
-                            <a href="#" class="btn btn-primary">View</a>
+                            <a th:href="'/learner/view-video/'+${enrolledSection.id}" class="btn-action btn-view">
+                                View
+                            </a>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-secondary">Download</a>
+                            <a th:href="${enrolledSection.section.notesUrl}" target="_blank" class="btn-action btn-download">
+                                Download
+                            </a>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-secondary">Take Quiz</a>
+                            <a th:href="'/learner/section/quiz/'+${enrolledSection.id}" class="btn-action btn-quiz">
+                                Take Quiz
+                            </a>
                         </td>
                     </tr>
                 </tbody>

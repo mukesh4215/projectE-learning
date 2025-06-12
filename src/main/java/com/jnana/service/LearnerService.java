@@ -13,9 +13,11 @@ import com.jnana.model.Course;
 import com.jnana.model.EnrolledCourse;
 import com.jnana.model.EnrolledSection;
 import com.jnana.model.Learner;
+import com.jnana.model.QuizQuestion;
 import com.jnana.model.Section;
 import com.jnana.repository.CourseRepository;
 import com.jnana.repository.EnrolledCourseRepository;
+import com.jnana.repository.EnrolledSectionRepository;
 import com.jnana.repository.LearnerRepository;
 import com.jnana.repository.SectionRepository;
 import com.razorpay.Order;
@@ -37,6 +39,9 @@ public class LearnerService {
 	
 	@Autowired
 	SectionRepository sectionRepository;
+	
+	@Autowired
+	EnrolledSectionRepository enrolledSectionRepository;
 
 	@Value("${razor-pay.api.key}")
 	String key;
@@ -158,4 +163,45 @@ public class LearnerService {
 			return "redirect:/login";
 		}
 	}
+	
+	public String viewVideo(HttpSession session, Long id, Model model) {
+		if (session.getAttribute("learner") != null) {
+
+			EnrolledSection section = enrolledSectionRepository.findById(id).get();
+			section.setSectionCompleted(true);
+
+			enrolledSectionRepository.save(section);
+
+			String videoUrl = section.getSection().getVideoUrl();
+			model.addAttribute("link", videoUrl);
+			EnrolledCourse course = enrolledCourseRepository.findByEnrolledSections(section);
+			model.addAttribute("id", course.getId());
+			return "play-video.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	public String loadSectionQuiz(Long id, HttpSession session, Model model) {
+		if (session.getAttribute("learner") != null) {
+
+			EnrolledSection section = enrolledSectionRepository.findById(id).get();
+
+			if (!section.isSectionCompleted()) {
+				EnrolledCourse course = enrolledCourseRepository.findByEnrolledSections(section);
+				session.setAttribute("fail", "First Complete the Section to Take Quiz");
+				return "redirect:/learner/view-enrolled-sections/" + course.getId();
+			}
+			List<QuizQuestion> questions = section.getSection().getQuizQuestions();
+			model.addAttribute("questions", questions);
+			model.addAttribute("id", id);
+
+			return "section-quiz.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
 }

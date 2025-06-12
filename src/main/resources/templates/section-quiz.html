@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz - Jnana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #7fffd4; /* Brighter Seafoam Green (Aquamarine) */
+            --secondary-color: #87cefa; /* Brighter Light Blue (LightSkyBlue) */
+            --text-color: #2c3e50; /* This is typically a dark text color, let's use it */
+            --shadow-color: rgba(0,0,0,0.1);
+            --error-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            padding: 20px;
+            overflow-y: auto; /* Ensure scrolling is possible if content is long */
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px var(--shadow-color);
+            width: 90%;
+            max-width: 700px; /* Adjusted max-width for quiz content */
+            animation: fadeIn 0.5s ease-out;
+            text-align: center; /* Center align text and form elements */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: transparent; /* Makes text transparent to show background gradient */
+            margin-bottom: 2.5rem;
+            font-size: 2.8rem; /* Slightly larger for emphasis */
+            font-weight: 700; /* Bolder font weight */
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); /* Gradient background */
+            -webkit-background-clip: text; /* Clips background to text shape for Chrome/Safari */
+            background-clip: text; /* Standard property for clipping background to text */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            letter-spacing: 1px; /* Slightly increased letter spacing */
+            animation: textFadeIn 1s ease-out forwards; /* Animation for a smooth entry */
+        }
+
+        /* Keyframe Animation for H1 */
+        @keyframes textFadeIn {
+            from { opacity: 0; transform: translateY(-30px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        /* Styling for each question group */
+        .question-group {
+            background: #f8f9fa; /* Light background for each question */
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem; /* Space between questions */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Subtle shadow for definition */
+            text-align: left; /* Align question text to the left */
+        }
+
+        .question-group h3 {
+            color: #333; /* Darker black/grey for questions */
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 500;
+            line-height: 1.4; /* Improve readability */
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 100px; /* Minimum height for answer area */
+        }
+
+        textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+
+        /* Submit Button Styling */
+        .btn-submit {
+            padding: 15px 35px; /* Larger padding for main action button */
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600; /* Bolder text for submit */
+            color: white;
+            background: var(--primary-color);
+            margin-top: 2.5rem; /* Space above the button */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            filter: brightness(1.05);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive adjustments for h1 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            body {
+                padding: 15px;
+            }
+            .container {
+                padding: 2rem;
+                margin-top: 1rem; /* Adjust alignment for smaller screens */
+                margin-bottom: 1rem;
+            }
+            .question-group {
+                padding: 1.2rem;
+                margin-bottom: 1.5rem;
+            }
+            .question-group h3 {
+                font-size: 1.2rem;
+            }
+            textarea {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            .btn-submit {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: 0.5px;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            .question-group {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            .question-group h3 {
+                font-size: 1.1rem;
+            }
+            textarea {
+                min-height: 80px;
+            }
+            .btn-submit {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz</h1>
+
+        <form th:action="'/learner/section/quiz/'+${id}" method="post">
+            <div class="question-list">
+                <div th:each="question:${questions}" class="question-group">
+                    <h3 th:text="${question.question}"></h3>
+                    <textarea th:name="${question.id}" rows="5" placeholder="Type Answer Here"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit Answers</button>
+        </form>
+    </div>
+</body>
+</html>
