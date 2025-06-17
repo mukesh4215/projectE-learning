@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/tutor")
 public class TutorController {
+
 	@Autowired
 	TutorService tutorService;
 
@@ -39,8 +40,8 @@ public class TutorController {
 	}
 
 	@GetMapping("/learners")
-	public String loadLearners(HttpSession session) {
-		return tutorService.loadLearners(session);
+	public String loadLearners(HttpSession session, Model model) {
+		return tutorService.loadLearners(session, model);
 	}
 
 	@GetMapping("/add-course")
@@ -57,7 +58,7 @@ public class TutorController {
 	public String viewCourses(HttpSession session, Model model) {
 		return tutorService.viewCourses(session, model);
 	}
-	
+
 	@GetMapping("/publish/{id}")
 	public String publishCourse(@PathVariable Long id, HttpSession session) {
 		return tutorService.publishCourse(id, session);
@@ -69,13 +70,15 @@ public class TutorController {
 	}
 
 	@PostMapping("/add-section")
-	public String addSection(@ModelAttribute @Valid SectionDto sectionDto, BindingResult result,Model model, HttpSession session) {
+	public String addSection(@ModelAttribute @Valid SectionDto sectionDto, BindingResult result, Model model,
+			HttpSession session) {
 		return tutorService.addSection(sectionDto, result, model, session);
 	}
-	
+
 	@GetMapping("/view-sections")
 	public String viewSections(HttpSession session, Model model) {
 		return tutorService.viewSections(session, model);
 	}
- }
+
+}
 

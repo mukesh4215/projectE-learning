@@ -2,13 +2,17 @@ package com.jnana.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.cloudinary.Cloudinary;
 import com.jnana.model.Course;
 import com.jnana.model.EnrolledCourse;
 import com.jnana.model.EnrolledSection;
@@ -19,6 +23,7 @@ import com.jnana.repository.CourseRepository;
 import com.jnana.repository.EnrolledCourseRepository;
 import com.jnana.repository.EnrolledSectionRepository;
 import com.jnana.repository.LearnerRepository;
+import com.jnana.repository.QuizQuestionRepository;
 import com.jnana.repository.SectionRepository;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
@@ -28,25 +33,41 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class LearnerService {
+
+	private final PasswordEncoder encoder;
+
+	private final Cloudinary cloudinary;
+
 	@Autowired
 	CourseRepository courseRepository;
-	
-	@Autowired
-	EnrolledCourseRepository enrolledCourseRepository;
-	
+
 	@Autowired
 	LearnerRepository learnerRepository;
-	
+
 	@Autowired
-	SectionRepository sectionRepository;
-	
+	ChatClient chatClient;
+
+	@Autowired
+	QuizQuestionRepository questionRepository;
+
 	@Autowired
 	EnrolledSectionRepository enrolledSectionRepository;
+
+	@Autowired
+	SectionRepository sectionRepository;
+
+	@Autowired
+	EnrolledCourseRepository enrolledCourseRepository;
 
 	@Value("${razor-pay.api.key}")
 	String key;
 	@Value("${razor-pay.api.secret}")
 	String secret;
+
+	LearnerService(Cloudinary cloudinary, PasswordEncoder encoder) {
+		this.cloudinary = cloudinary;
+		this.encoder = encoder;
+	}
 
 	public String loadHome(HttpSession session) {
 		if (session.getAttribute("learner") != null) {
@@ -95,6 +116,7 @@ public class LearnerService {
 					model.addAttribute("currency", "INR");
 					model.addAttribute("leaner", learner);
 					model.addAttribute("key", key);
+					model.addAttribute("path", "/learner/enroll-paidcourse/" + course.getId());
 
 					return "payment.html";
 
@@ -163,7 +185,7 @@ public class LearnerService {
 			return "redirect:/login";
 		}
 	}
-	
+
 	public String viewVideo(HttpSession session, Long id, Model model) {
 		if (session.getAttribute("learner") != null) {
 
@@ -198,6 +220,64 @@ public class LearnerService {
 			model.addAttribute("id", id);
 
 			return "section-quiz.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	public String submitQuiz(Long id, HttpSession session, Map<String, String> quiz) {
+		if (session.getAttribute("learner") != null) {
+			EnrolledSection section = enrolledSectionRepository.findById(id).get();
+			String prompt = "";
+			for (String questionId : quiz.keySet()) {
+				String question = questionRepository.findById(Long.parseLong(questionId)).get().getQuestion();
+				String answer = quiz.get(questionId);
+				prompt += ". question: " + question + ". answer: " + answer;
+			}
+			prompt += "Evaluate the following quiz. For each question, consider the given answer. Return ONLY the total score out of 100 (just a number).\n\n";
+			String answer = chatClient.prompt(prompt).call().content();
+			int score = Integer.parseInt(answer);
+			if (score >= 75) {
+				section.setSectionQuizCompleted(true);
+				enrolledSectionRepository.save(section);
+				session.setAttribute("pass", "Quiz Cleared Success");
+			} else {
+				session.setAttribute("fail", "Quiz did not Clear try again");
+			}
+			EnrolledCourse course = enrolledCourseRepository.findByEnrolledSections(section);
+
+			return "redirect:/learner/view-enrolled-sections/" + course.getId();
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	public String enrollPaidCourse(HttpSession session, Long id, Model model) {
+		if (session.getAttribute("learner") != null) {
+			Learner learner = (Learner) session.getAttribute("learner");
+			Course course = courseRepository.findById(id).get();
+			List<Section> sections = sectionRepository.findByCourse(course);
+			List<EnrolledSection> enrolledSections = new ArrayList<EnrolledSection>();
+			for (Section section : sections) {
+				EnrolledSection enrolledSection = new EnrolledSection();
+				enrolledSection.setSection(section);
+				enrolledSections.add(enrolledSection);
+			}
+
+			EnrolledCourse enrolledCourse = new EnrolledCourse();
+			enrolledCourse.setCourse(course);
+			enrolledCourse.setEnrolledSections(enrolledSections);
+
+			learner.getEnrolledCourses().add(enrolledCourse);
+
+			learnerRepository.save(learner);
+
+			session.setAttribute("pass", "Courses Enrolled Success, Thanks " + learner.getName());
+			session.setAttribute("learner", learnerRepository.findById(learner.getId()).get());
+			return "redirect:/learner/home";
+
 		} else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";

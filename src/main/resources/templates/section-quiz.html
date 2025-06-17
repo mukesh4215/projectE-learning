@@ -2,15 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Quiz - Jnana</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Section Quiz - Jnana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="https://yogastudies.org/wp-content/uploads/jnana.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #7fffd4; /* Brighter Seafoam Green (Aquamarine) */
-            --secondary-color: #87cefa; /* Brighter Light Blue (LightSkyBlue) */
-            --text-color: #2c3e50; /* This is typically a dark text color, let's use it */
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --text-color: #2c3e50;
             --shadow-color: rgba(0,0,0,0.1);
-            --error-color: #f44336;
+            --bg-light: #f5f7fa;
+            --accent-color: #ff5722;
         }
 
         * {
@@ -21,184 +24,145 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--bg-light);
             min-height: 100vh;
+            padding-top: 100px;
             display: flex;
-            align-items: center; /* Center content vertically */
-            justify-content: center; /* Center content horizontally */
-            padding: 20px;
-            overflow-y: auto; /* Ensure scrolling is possible if content is long */
-            overflow-x: hidden;
+            flex-direction: column;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.2rem 5%;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: 1px;
         }
 
         .container {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px var(--shadow-color);
             width: 90%;
-            max-width: 700px; /* Adjusted max-width for quiz content */
-            animation: fadeIn 0.5s ease-out;
-            text-align: center; /* Center align text and form elements */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px var(--shadow-color);
+            animation: slideUp 0.5s ease-out;
         }
 
         h1 {
-            color: transparent; /* Makes text transparent to show background gradient */
-            margin-bottom: 2.5rem;
-            font-size: 2.8rem; /* Slightly larger for emphasis */
-            font-weight: 700; /* Bolder font weight */
             text-align: center;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); /* Gradient background */
-            -webkit-background-clip: text; /* Clips background to text shape for Chrome/Safari */
-            background-clip: text; /* Standard property for clipping background to text */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-            letter-spacing: 1px; /* Slightly increased letter spacing */
-            animation: textFadeIn 1s ease-out forwards; /* Animation for a smooth entry */
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
         }
 
-        /* Keyframe Animation for H1 */
-        @keyframes textFadeIn {
-            from { opacity: 0; transform: translateY(-30px); filter: blur(5px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-
-        /* Styling for each question group */
-        .question-group {
-            background: #f8f9fa; /* Light background for each question */
-            border-radius: 10px;
+        .question-card {
+            background: var(--bg-light);
             padding: 1.5rem;
-            margin-bottom: 2rem; /* Space between questions */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Subtle shadow for definition */
-            text-align: left; /* Align question text to the left */
+            border-radius: 15px;
+            margin-bottom: 2rem;
         }
 
-        .question-group h3 {
-            color: #333; /* Darker black/grey for questions */
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
+        .question-text {
+            color: var(--text-color);
+            font-size: 1.1rem;
             font-weight: 500;
-            line-height: 1.4; /* Improve readability */
+            margin-bottom: 1rem;
         }
 
         textarea {
             width: 100%;
-            padding: 12px;
+            padding: 1rem;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
             transition: border-color 0.3s ease;
             font-family: 'Poppins', sans-serif;
-            resize: vertical; /* Allow vertical resizing */
-            min-height: 100px; /* Minimum height for answer area */
         }
 
         textarea:focus {
-            border-color: var(--secondary-color);
             outline: none;
+            border-color: var(--primary-color);
         }
 
-        /* Submit Button Styling */
-        .btn-submit {
-            padding: 15px 35px; /* Larger padding for main action button */
+        .btn {
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 30px;
+            border-radius: 8px;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 600; /* Bolder text for submit */
+            transition: all 0.3s ease;
+            font-weight: 500;
             color: white;
-            background: var(--primary-color);
-            margin-top: 2.5rem; /* Space above the button */
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            display: block;
+            margin: 2rem auto 0;
         }
 
-        .btn-submit:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-            filter: brightness(1.05);
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-submit:active {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .footer {
+            background: linear-gradient(to right, var(--text-color), #1a2634);
+            color: white;
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: auto;
         }
 
-        /* Responsive adjustments for h1 */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.2rem;
-            }
-            body {
-                padding: 15px;
-            }
-            .container {
-                padding: 2rem;
-                margin-top: 1rem; /* Adjust alignment for smaller screens */
-                margin-bottom: 1rem;
-            }
-            .question-group {
-                padding: 1.2rem;
-                margin-bottom: 1.5rem;
-            }
-            .question-group h3 {
-                font-size: 1.2rem;
-            }
-            textarea {
-                padding: 10px;
-                font-size: 0.95rem;
-            }
-            .btn-submit {
-                padding: 12px 30px;
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-                letter-spacing: 0.5px;
-            }
-            .container {
-                padding: 1.5rem;
-            }
-            .question-group {
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
-            .question-group h3 {
-                font-size: 1.1rem;
-            }
-            textarea {
-                min-height: 80px;
-            }
-            .btn-submit {
-                padding: 10px 25px;
-                font-size: 0.9rem;
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/learner/home" class="logo">Jnana</a>
+    </nav>
+
     <div class="container">
-        <h1>Quiz</h1>
+        <h1>Section Quiz</h1>
 
         <form th:action="'/learner/section/quiz/'+${id}" method="post">
-            <div class="question-list">
-                <div th:each="question:${questions}" class="question-group">
-                    <h3 th:text="${question.question}"></h3>
-                    <textarea th:name="${question.id}" rows="5" placeholder="Type Answer Here"></textarea>
-                </div>
+            <div class="question-card" th:each="question:${questions}">
+                <h3 class="question-text" th:text="${question.question} + ' ?'"></h3>
+                <textarea 
+                    th:name="${question.id}" 
+                    placeholder="Type your answer here..."
+                    required></textarea>
             </div>
 
-            <button type="submit" class="btn-submit">Submit Answers</button>
+            <button type="submit" class="btn">
+                <i class="fas fa-paper-plane"></i>
+                Submit Answers
+            </button>
         </form>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Jnana. All rights reserved.</p>
+    </footer>
 </body>
 </html>

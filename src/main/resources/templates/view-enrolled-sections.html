@@ -2,15 +2,19 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>View Sections - Jnana</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Course Sections - Jnana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="https://yogastudies.org/wp-content/uploads/jnana.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #7fffd4; /* Brighter Seafoam Green (Aquamarine) */
-            --secondary-color: #87cefa; /* Brighter Light Blue (LightSkyBlue) */
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
             --text-color: #2c3e50;
             --shadow-color: rgba(0,0,0,0.1);
             --error-color: #f44336;
+            --bg-light: #f5f7fa;
+            --accent-color: #ff5722;
         }
 
         * {
@@ -21,225 +25,176 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--bg-light);
             min-height: 100vh;
-            padding: 2rem;
+            padding-top: 100px;
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Aligns content to the top */
+            flex-direction: column;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.2rem 5%;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: 1px;
         }
 
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px var(--shadow-color);
+            margin: 2rem auto;
+            padding: 2.5rem;
             width: 90%;
-            max-width: 1000px; /* Slightly adjusted max-width for this page if content is narrower */
-            margin-top: 2rem;
-            animation: fadeIn 0.5s ease-out;
-            text-align: center;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            max-width: 1200px;
         }
 
         h1 {
+            text-align: center;
             color: var(--text-color);
             margin-bottom: 2rem;
             font-size: 2.5rem;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 30px var(--shadow-color);
+            transition: transform 0.3s ease;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            color: var(--text-color);
+            font-size: 1.25rem;
             font-weight: 600;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem auto;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden; /* Ensures rounded corners apply to content */
-            box-shadow: 0 5px 15px var(--shadow-color);
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: var(--text-color);
-            color: white;
-            font-weight: 500;
-        }
-
-        tr:hover {
-            background: #f8f9fa;
-        }
-
-        /* Button base styling */
         .btn {
-            padding: 10px 20px; /* Consistent padding for buttons */
+            padding: 0.8rem;
             border: none;
-            border-radius: 30px;
+            border-radius: 8px;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             font-weight: 500;
             color: white;
-            text-decoration: none; /* Ensure all general buttons don't have underline */
-            display: inline-block;
-            filter: brightness(1.1);
-            white-space: nowrap; /* Prevent text wrapping inside buttons */
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        .btn-primary {
+        .btn-video {
             background: var(--primary-color);
         }
 
-        .btn-secondary {
+        .btn-notes {
             background: var(--secondary-color);
+        }
+
+        .btn-quiz {
+            background: var(--accent-color);
+        }
+
+        .btn-back {
+            background: var(--text-color);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Grouping for buttons in a cell */
-        .btn-group {
-            display: flex;
-            gap: 10px; /* Space between buttons */
-            justify-content: flex-start; /* Align buttons to the left */
-            flex-wrap: wrap; /* Allows buttons to wrap if needed */
-        }
-
-        /* Specific styles for the "View", "Download", and "Take Quiz" buttons */
-        .btn-action {
-            padding: 8px 16px; /* Slightly smaller padding for in-table buttons */
-            border-radius: 20px; /* More rounded look for these buttons */
-            font-size: 0.85rem;
-            font-weight: 500;
+        .footer {
+            background: linear-gradient(to right, var(--text-color), #1a2634);
             color: white;
-            transition: all 0.3s ease;
-            filter: brightness(1.05); /* Slightly brighter by default */
-            text-decoration: none; /* REMOVES THE UNDERLINE */
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: auto;
         }
 
-        .btn-view {
-            background-color: #28a745; /* Green for View */
-        }
-
-        .btn-download {
-            background-color: #007bff; /* Blue for Download */
-        }
-
-        .btn-quiz {
-            background-color: #ffc107; /* Yellow/Orange for Take Quiz */
-            color: var(--text-color); /* Darker text for better contrast on yellow */
-        }
-
-        .btn-action:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            filter: brightness(1.15); /* Even brighter on hover */
-        }
-
-
-        /* Responsive table adjustments */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-            .container {
-                padding: 1rem;
-                margin-top: 1rem;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap; /* Keeps cells in a single row for scrolling */
-            }
-
-            table {
-                width: 100%;
-                /* Adjust min-width based on content, including button widths */
-                min-width: 600px; 
-            }
-
-            th, td {
-                padding: 0.8rem;
-            }
-
-            /* Adjust button group for smaller screens if they need to stack more aggressively */
-            .btn-group {
-                flex-direction: column; /* Stack buttons vertically */
-                gap: 8px;
-                align-items: stretch; /* Make buttons fill available width when stacked */
-                justify-content: center;
-            }
-
-            .btn {
-                width: 100%; /* Make buttons fill available width */
-                text-align: center; /* Center text within stacked buttons */
-            }
-        }
-
-        /* For very small screens where even stacked buttons might be too wide or need specific handling */
-        @media (max-width: 480px) {
-            .btn {
-                padding: 8px 15px;
-                font-size: 0.8rem;
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/learner/home" class="logo">Jnana</a>
+    </nav>
+
     <div class="container">
         <h1>Course Sections</h1>
 
-        <th:block th:if="${#lists.isEmpty(enrolledSections)}">
-            <p>No sections found for this course.</p>
-        </th:block>
-        <th:block th:unless="${#lists.isEmpty(enrolledSections)}">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Section Title</th>
-                        <th>Video</th>
-                        <th>Notes</th>
-                        <th>Quiz</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="enrolledSection:${enrolledSections}">
-                        <td th:text="${enrolledSection.section.title}"></td>
-                        <td>
-                            <a th:href="'/learner/view-video/'+${enrolledSection.id}" class="btn-action btn-view">
-                                View
-                            </a>
-                        </td>
-                        <td>
-                            <a th:href="${enrolledSection.section.notesUrl}" target="_blank" class="btn-action btn-download">
-                                Download
-                            </a>
-                        </td>
-                        <td>
-                            <a th:href="'/learner/section/quiz/'+${enrolledSection.id}" class="btn-action btn-quiz">
-                                Take Quiz
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </th:block>
+        <div class="section-grid">
+            <div class="section-card" th:each="enrolledSection:${enrolledSections}">
+                <h2 class="section-title" th:text="${enrolledSection.section.title}"></h2>
+                
+                <div class="btn-group">
+                    <a th:href="'/learner/view-video/'+${enrolledSection.id}" class="btn btn-video">
+                        <i class="fas fa-play-circle"></i>
+                        Watch Video
+                    </a>
+                    <a th:href="${enrolledSection.section.notesUrl}" target="_blank" class="btn btn-notes">
+                        <i class="fas fa-file-pdf"></i>
+                        View Notes
+                    </a>
+                    <a th:href="'/learner/section/quiz/'+${enrolledSection.id}" class="btn btn-quiz">
+                        <i class="fas fa-question-circle"></i>
+                        Take Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
 
-        <br>
-        <a href="/learner/enrolled-courses" class="btn btn-secondary">Back to Enrolled Courses</a>
+        <div style="text-align: center;">
+            <a href="/learner/enrolled-courses" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+        </div>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Jnana. All rights reserved.</p>
+    </footer>
 </body>
 </html>

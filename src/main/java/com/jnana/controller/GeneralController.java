@@ -17,8 +17,10 @@ import jakarta.validation.Valid;
 
 @Controller
 public class GeneralController {
+
 	@Autowired
 	GeneralService generalService;
+
 	@GetMapping("/")
 	public String loadHome() {
 		return "home.html";
@@ -43,7 +45,7 @@ public class GeneralController {
 	public String submitOtp(@RequestParam int otp, HttpSession session) {
 		return generalService.confirmOtp(otp, session);
 	}
-	
+
 	@GetMapping("/resend-otp")
 	public String resendOtp(HttpSession session) {
 		return generalService.resendOtp(session);
@@ -63,4 +65,5 @@ public class GeneralController {
 	public String logout(HttpSession session) {
 		return generalService.logout(session);
 	}
+
 }

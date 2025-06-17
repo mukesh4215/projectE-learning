@@ -1,11 +1,15 @@
 package com.jnana.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jnana.service.LearnerService;
 
@@ -36,6 +40,11 @@ public class LearnerController {
 	public String viewEnrolledCourses(HttpSession session, Model model) {
 		return learnerService.viewEnrolledCourses(session, model);
 	}
+	
+	@PostMapping("/enroll-paidcourse/{id}")
+	public String enrollPaidCourse(HttpSession session, @PathVariable Long id, Model model) {
+		return learnerService.enrollPaidCourse(session, id, model);
+	}
 
 	@GetMapping("/view-enrolled-sections/{id}")
 	public String viewEnrolledSections(HttpSession session, @PathVariable Long id, Model model) {
@@ -50,5 +59,11 @@ public class LearnerController {
 	@GetMapping("/section/quiz/{id}")
 	public String loadSectionQuiz(@PathVariable Long id, HttpSession session, Model model) {
 		return learnerService.loadSectionQuiz(id, session, model);
+	}
+	
+	@PostMapping("/section/quiz/{id}")
+	public String sectionQuizSubmit(@PathVariable Long id, HttpSession session,
+			@RequestParam Map<String, String> quiz) {
+		return learnerService.submitQuiz(id, session, quiz);
 	}
 }

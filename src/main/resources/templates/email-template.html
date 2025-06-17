@@ -2,15 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Login - Jnana</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Jnana - Email Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #7fffd4; /* Brighter Seafoam Green (Aquamarine) */
-            --secondary-color: #87cefa; /* Brighter Light Blue (LightSkyBlue) */
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
             --text-color: #2c3e50;
             --shadow-color: rgba(0,0,0,0.1);
-            --error-color: #f44336;
+            --bg-light: #f5f7fa;
+            --accent-color: #ff5722;
         }
 
         * {
@@ -22,11 +23,9 @@
 
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
         .container {
@@ -35,137 +34,122 @@
             border-radius: 20px;
             box-shadow: 0 15px 30px var(--shadow-color);
             width: 90%;
-            max-width: 500px;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 {
-            color: var(--text-color);
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-            font-weight: 600;
+            max-width: 600px;
+            margin: 20px auto;
             text-align: center;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
+        .logo {
+            margin-bottom: 2rem;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        h2 {
             color: var(--text-color);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-        }
-
-        button {
-            background: var(--primary-color);
-            color: white;
-            padding: 14px 35px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        h3 {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
             font-weight: 500;
-            width: 100%;
+        }
+
+        h4 {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .highlight {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .otp-container {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 15px;
+        }
+
+        .otp {
+            font-size: 3rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            letter-spacing: 4px;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 1rem 0;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .footer {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .warning {
+            color: var(--error-color);
+            font-size: 0.85rem;
             margin-top: 1rem;
-            filter: brightness(1.1); /* Applied brightness to the button directly */
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            /* Removed any additional brightness on hover for a consistent look without extra hover action */
+        .social-links {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
         }
 
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            color: white;
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateX(100%);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-        }
-
-        .toast.success {
-            background: var(--primary-color);
-        }
-
-        .toast.error {
-            background: var(--error-color);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(0);
+        .social-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
+        <div class="logo">
+            <img src="https://yogastudies.org/wp-content/uploads/jnana.jpg" alt="Jnana Logo">
+        </div>
+
+        <h2>Welcome to Jnana!</h2>
+        <h3>Hello <span class="highlight" th:text="${name}"></span>!</h3>
         
-        <div id="successToast" class="toast success" th:if="${session.pass}" th:text="${session.pass}"></div>
-        <div id="errorToast" class="toast error" th:if="${session.fail}" th:text="${session.fail}"></div>
-        <th:block th:text="${@generalService.removeMessage()}"></th:block>
+        <div class="otp-container">
+            <h4>You are registering as a <span class="highlight" th:text="${role}"></span></h4>
+            <p>Please use the following OTP to verify your account:</p>
+            <div class="otp" th:text="${otp}"></div>
+        </div>
 
-        <form action="/login" method="post">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-
-            <button type="submit">Login</button>
-        </form>
-    </div>
-
-    <script>
-        function showToast() {
-            const successToast = document.getElementById('successToast');
-            const errorToast = document.getElementById('errorToast');
+        <div class="footer">
+            <p>This OTP is valid for 10 minutes.</p>
+            <p class="warning">For security reasons, please do not share this OTP with anyone.</p>
             
-            [successToast, errorToast].forEach(toast => {
-                if (toast && toast.textContent.trim() !== '') {
-                    toast.classList.add('show');
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                    }, 2000);
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', showToast);
-    </script>
+            <div class="social-links">
+                <a href="#" class="social-link">Website</a>
+                <a href="#" class="social-link">Support</a>
+                <a href="#" class="social-link">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

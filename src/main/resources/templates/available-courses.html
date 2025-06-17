@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Available Courses - Jnana</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="https://yogastudies.org/wp-content/uploads/jnana.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #7fffd4; /* Brighter Seafoam Green (Aquamarine) */
-            --secondary-color: #87cefa; /* Brighter Light Blue (LightSkyBlue) */
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
             --text-color: #2c3e50;
             --shadow-color: rgba(0,0,0,0.1);
-            --error-color: #f44336; /* Although not used here, keeping for consistency */
+            --error-color: #f44336;
+            --bg-light: #f5f7fa;
+            --accent-color: #ff5722;
         }
 
         * {
@@ -21,145 +25,207 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--bg-light);
             min-height: 100vh;
-            padding: 2rem;
-            display: flex; /* Using flexbox for centering */
-            justify-content: center;
-            align-items: flex-start; /* Align to the start to keep content at the top */
+            padding-top: 100px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.2rem 5%;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: 1px;
         }
 
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px var(--shadow-color);
+            margin: 2rem auto;
+            padding: 2.5rem;
             width: 90%;
             max-width: 1200px;
-            margin-top: 2rem; /* Add some top margin */
-            animation: fadeIn 0.5s ease-out;
-            text-align: center; /* Center the content inside the container */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
+            text-align: center;
             color: var(--text-color);
             margin-bottom: 2rem;
             font-size: 2.5rem;
-            font-weight: 600;
-            text-align: center;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem auto; /* Center the table within the container */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .course-card {
             background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px var(--shadow-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 30px var(--shadow-color);
+            transition: transform 0.3s ease;
+            animation: slideUp 0.5s ease-out;
+            display: flex;
+            flex-direction: column;
         }
 
-        th, td {
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .course-title {
+            color: var(--text-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .course-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .course-sections {
+            background: var(--bg-light);
             padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: var(--text-color);
-            color: white;
-            font-weight: 500;
-        }
-
-        tr:hover {
-            background: #f8f9fa;
-        }
-
-        .btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 30px;
+            border-radius: 10px;
+            margin: 1rem 0;
             font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .price-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             font-weight: 500;
             color: white;
-            text-decoration: none;
-            display: inline-block;
-            filter: brightness(1.1);
+            margin: 1rem 0;
         }
 
-        .btn-primary {
-            background: var(--primary-color);
-        }
-
-        .btn-secondary {
+        .price-free {
             background: var(--secondary-color);
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .price-paid {
+            background: var(--primary-color);
         }
 
-        /* Specific styling for the Sections column */
-        .section-titles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px; /* Space between section titles */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: auto;
         }
 
-        .section-titles span {
-            background-color: #e0e0e0; /* Light gray background for readability */
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            color: var(--text-color);
-            white-space: nowrap; /* Prevent titles from breaking into multiple lines within a badge */
+        .btn-enroll {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .btn-enrolled {
+            background: var(--accent-color);
+            cursor: default;
+        }
+
+        .btn-back {
+            background: var(--text-color);
+        }
+
+        .footer {
+            background: linear-gradient(to right, var(--text-color), #1a2634);
+            color: white;
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: auto;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/learner/home" class="logo">Jnana</a>
+    </nav>
+
     <div class="container">
         <h1>Available Courses</h1>
 
-        <table>
-            <tr>
-                <th>Course Title</th>
-                <th>Course Description</th>
-                <th>Total Sections</th>
-                <th>Sections</th>
-                <th>Price</th>
-                <th>Action</th>
-            </tr>
-
-            <tr th:each="course:${courses}">
-                <td th:text="${course.title}"></td>
-                <td th:text="${course.description}"></td>
-                <td th:text="${@sectionRepository.findByCourse(course).size()}"></td>
-                <td>
-                    <div class="section-titles">
-                        <span th:each="section:${@sectionRepository.findByCourse(course)}"
-                              th:text="${section.title}"></span>
+        <div class="course-grid">
+            <div class="course-card" th:each="course:${courses}">
+                <h2 class="course-title" th:text="${course.title}"></h2>
+                <p class="course-description" th:text="${course.description}"></p>
+                
+                <div class="course-sections">
+                    <strong>Total Sections: </strong>
+                    <span th:text="${@sectionRepository.findByCourse(course).size()}"></span>
+                    <div>
+                        <strong>Sections: </strong>
+                        <span th:each="section:${@sectionRepository.findByCourse(course)}" 
+                              th:text="${section.title} + ', '">
+                        </span>
                     </div>
-                </td>
-                <td th:if="${!course.paid}">Free</td>
-                <td th:if="${course.paid}">199 &#8377;</td>
-                <td th:if="${!session.learner.checkCourse(course.id)}">
-                    <a th:href="'/learner/enroll/'+${course.id}" class="btn btn-primary">Enroll</a>
-                </td>
-				<td th:if="${session.learner.checkCourse(course.id)}">Already
-					Enrolled</td>
-            </tr>
-        </table>
+                </div>
 
-        <br>
-        <a href="/learner/home" class="btn btn-secondary">Back</a>
+                <span class="price-tag" 
+                      th:classappend="${!course.paid ? 'price-free' : 'price-paid'}"
+                      th:text="${!course.paid ? 'Free' : '199 ₹'}">
+                </span>
+
+                <a th:if="${!session.learner.checkCourse(course.id)}" 
+                   th:href="'/learner/enroll/'+${course.id}" 
+                   class="btn btn-enroll">
+                    <i class="fas fa-graduation-cap"></i>
+                    Enroll Now
+                </a>
+                <span th:if="${session.learner.checkCourse(course.id)}" 
+                      class="btn btn-enrolled">
+                    <i class="fas fa-check-circle"></i>
+                    Already Enrolled
+                </span>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/learner/home" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+        </div>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Jnana. All rights reserved.</p>
+    </footer>
 </body>
 </html>

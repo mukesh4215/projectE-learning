@@ -16,12 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.jnana.model.Course;
+import com.jnana.model.EnrolledCourse;
+import com.jnana.model.Learner;
 import com.jnana.model.QuizQuestion;
 import com.jnana.model.Section;
 import com.jnana.model.Tutor;
 import com.jnana.mydto.CourseDto;
 import com.jnana.mydto.SectionDto;
 import com.jnana.repository.CourseRepository;
+import com.jnana.repository.EnrolledCourseRepository;
+import com.jnana.repository.LearnerRepository;
 import com.jnana.repository.SectionRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -35,6 +39,12 @@ public class TutorService {
 
 	@Autowired
 	CourseRepository courseRepository;
+
+	@Autowired
+	LearnerRepository learnerRepository;
+
+	@Autowired
+	EnrolledCourseRepository enrolledCourseRepository;
 
 	@Autowired
 	SectionRepository sectionRepository;
@@ -75,9 +85,16 @@ public class TutorService {
 		}
 	}
 
-	public String loadLearners(HttpSession session) {
+	public String loadLearners(HttpSession session, Model model) {
 		if (session.getAttribute("tutor") != null) {
-			return "tutor-home.html";
+			Tutor tutor = (Tutor) session.getAttribute("tutor");
+			List<Course> courses = courseRepository.findByTutor(tutor);
+			List<EnrolledCourse> enrolledCourses = enrolledCourseRepository.findByCourseIn(courses);
+
+			List<Learner> learners = learnerRepository.findByEnrolledCoursesIn(enrolledCourses);
+			model.addAttribute("learners", learners);
+			return "display-learners.html";
+
 		} else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";
@@ -146,7 +163,7 @@ public class TutorService {
 			List<Section> sections = sectionRepository.findByCourse(course);
 
 			if (course.getQuizQuestions().isEmpty() || sections.isEmpty()) {
-				session.setAttribute("fail", "There Should be atleast one section and Quiz To Publish");
+				session.setAttribute("fail", "There Should be atleast one section To Publish");
 				return "redirect:/tutor/view-courses";
 			} else {
 				course.setPublished(true);
