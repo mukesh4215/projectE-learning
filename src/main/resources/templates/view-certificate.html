@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>View Certificate - Jnana</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #64ffda;
+        letter-spacing: 1px;
+      }
+
+      .logo:hover {
+        color: #4fd3b8;
+      }
+
+      nav a {
+        background-color: #3d3d3d;
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 12px;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 13px;
+        border: 2px solid #555555;
+        transition: all 0.3s ease;
+      }
+
+      nav a:hover {
+        background-color: #64ffda;
+        color: #1a1a1a;
+        border-color: #64ffda;
+      }
+
+      .hero {
+        background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+        color: #ffffff;
+        padding: 15px 20px;
+        text-align: center;
+        border-radius: 15px;
+        margin: 10px 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        border: 1px solid #444444;
+      }
+
+      .hero h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: #64ffda;
+      }
+
+      .hero p {
+        font-size: 12px;
+        font-weight: 400;
+        max-width: 400px;
+        margin: 0 auto;
+        line-height: 1.3;
+        color: #b0b0b0;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 15px 20px;
+        overflow-y: auto;
+      }
+
+      .certificate-container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .certificate-card {
+        background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+        border: 1px solid #444444;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .certificate-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #64ffda, #4fd3b8, #64ffda);
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #e0e0e0;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #64ffda;
+        transform: scale(1.1);
+      }
+
+      .certificate-header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #555555;
+      }
+
+      .certificate-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #64ffda;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .certificate-subtitle {
+        color: #b0b0b0;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      .certificate-body {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid #555555;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+      }
+
+      .certificate-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .detail-item {
+        background: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 10px;
+        padding: 15px;
+      }
+
+      .detail-label {
+        color: #64ffda;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .detail-value {
+        color: #e0e0e0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      .certificate-signature {
+        text-align: center;
+        padding: 20px;
+        border-top: 1px solid #555555;
+        margin-top: 20px;
+      }
+
+      .signature-text {
+        color: #b0b0b0;
+        font-size: 12px;
+        font-style: italic;
+        margin-bottom: 10px;
+      }
+
+      .signature-line {
+        width: 200px;
+        height: 1px;
+        background: #555555;
+        margin: 0 auto 8px;
+      }
+
+      .signature-name {
+        color: #64ffda;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-family: "Quicksand", sans-serif;
+      }
+
+      .btn-primary {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #45a049;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: white;
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: white;
+      }
+
+      .certificate-id {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #555555;
+      }
+
+      .id-label {
+        color: #888888;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+      }
+
+      .id-value {
+        color: #64ffda;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: monospace;
+      }
+
+      footer {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        border-radius: 15px 15px 0 0;
+        font-weight: 500;
+        border-top: 1px solid #444444;
+        font-size: 12px;
+        margin-top: auto;
+      }
+
+      .alert {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        color: white;
+        min-width: 250px;
+        z-index: 1000;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .alert-success {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        border: 2px solid #4caf50;
+      }
+
+      .alert-error {
+        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        border: 2px solid #f44336;
+      }
+
+      .alert-close {
+        float: right;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 10px;
+        padding: 3px 6px;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+
+      .alert-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      /* Print Styles */
+      @media print {
+        body {
+          background-color: white;
+          color: black;
+        }
+
+        header,
+        footer,
+        .button-group,
+        .close-btn,
+        .alert {
+          display: none !important;
+        }
+
+        .certificate-card {
+          background: white;
+          border: 2px solid #000;
+          box-shadow: none;
+          page-break-inside: avoid;
+        }
+
+        .certificate-card::before {
+          background: #000;
+        }
+
+        .certificate-title,
+        .detail-label,
+        .signature-name,
+        .id-value {
+          color: #000 !important;
+        }
+
+        .detail-item,
+        .certificate-body {
+          background: #f9f9f9;
+          border-color: #ccc;
+        }
+      }
+
+      /* Font Awesome Icons */
+      .fas {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .fa-certificate:before {
+        content: "\f0a3";
+      }
+      .fa-user:before {
+        content: "\f007";
+      }
+      .fa-graduation-cap:before {
+        content: "\f19d";
+      }
+      .fa-calendar:before {
+        content: "\f073";
+      }
+      .fa-id-card:before {
+        content: "\f2c2";
+      }
+      .fa-download:before {
+        content: "\f019";
+      }
+      .fa-times:before {
+        content: "\f00d";
+      }
+      .fa-check:before {
+        content: "\f00c";
+      }
+      .fa-exclamation:before {
+        content: "\f12a";
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Toast Container -->
+    <div th:if="${session.pass}" class="alert alert-success" id="successAlert">
+      <span th:text="${session.pass}">Success message</span>
+      <button class="alert-close" onclick="closeAlert('successAlert')">
+        &times;
+      </button>
+    </div>
+
+    <div th:if="${session.fail}" class="alert alert-error" id="errorAlert">
+      <span th:text="${session.fail}">Error message</span>
+      <button class="alert-close" onclick="closeAlert('errorAlert')">
+        &times;
+      </button>
+    </div>
+
+    <th:block th:text="${@generalService.removeMessage()}"></th:block>
+
+    <!-- Header -->
+    <header>
+      <a href="/learner/home" class="logo">Jnana</a>
+      <nav>
+        <a href="/learner/enrolled-courses">My Courses</a>
+        <a href="/logout">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1><i class="fas fa-certificate"></i> Certificate of Completion</h1>
+      <p>Official course completion certificate</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="certificate-container">
+        <!-- Certificate Card -->
+        <div class="certificate-card">
+          
+
+          <!-- Certificate Header -->
+          <div class="certificate-header">
+            <h2 class="certificate-title">
+              <i class="fas fa-certificate"></i>
+              Certificate of Completion
+            </h2>
+            <p class="certificate-subtitle">
+              This certifies that the student has successfully completed the
+              course
+            </p>
+          </div>
+
+          <!-- Certificate Body -->
+          <div class="certificate-body">
+            <div class="certificate-details">
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="fas fa-user"></i>
+                  Student Name
+                </div>
+                <div class="detail-value" th:text="${certificate.learner.name}">
+                  Student Name
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="fas fa-graduation-cap"></i>
+                  Course Title
+                </div>
+                <div class="detail-value" th:text="${certificate.course.title}">
+                  Course Name
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="fas fa-calendar"></i>
+                  Completion Date
+                </div>
+                <div
+                  class="detail-value"
+                  th:text="${certificate.issueDate}"
+                >
+                  Completion Date
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="fas fa-id-card"></i>
+                  Certificate ID
+                </div>
+                <div
+                  class="detail-value"
+                  th:text="${certificate.id}"
+                >
+                  Certificate ID
+                </div>
+              </div>
+            </div>
+
+            <!-- Certificate Signature -->
+            <div class="certificate-signature">
+              <p class="signature-text">Digitally signed and verified by</p>
+              <div class="signature-line"></div>
+              <p class="signature-name">Jnana E-Learning Platform</p>
+            </div>
+          </div>
+
+          <!-- Certificate ID Footer -->
+          <div class="certificate-id">
+            <div class="id-label">Verification ID</div>
+            <div class="id-value" th:text="${certificate.id}">
+              CERT-2025-001
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="button-group">
+            <button
+              class="btn btn-primary"
+              onclick="window.print()"
+              title="Download/Print Certificate"
+            >
+              <i class="fas fa-download"></i>
+              <span>Download Certificate</span>
+            </button>
+          
+          </div>
+        </div>
+
+        <div class="certificate-card">
+          <div class="certificate-header">
+            <h3 class="certificate-title">Certificate Information</h3>
+          </div>
+
+          <div class="info-content">
+            <div class="info-item">
+              <div class="info-header">
+                <i class="fas fa-certificate"></i>
+                <span>Authenticity</span>
+              </div>
+              <p>
+                This certificate is digitally signed and can be verified using
+                the certificate ID provided above.
+              </p>
+            </div>
+
+            <div class="info-item">
+              <div class="info-header">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Course Completion</span>
+              </div>
+              <p>
+                The student has successfully completed all course sections and
+                passed the final assessment with the required score.
+              </p>
+            </div>
+
+            <div class="info-item">
+              <div class="info-header">
+                <i class="fas fa-download"></i>
+                <span>Download Options</span>
+              </div>
+              <p>
+                You can download this certificate as a PDF by clicking the
+                download button above. The certificate is optimized for
+                printing.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verification Card -->
+        <div class="certificate-card">
+          <div class="certificate-header">
+            <h3 class="certificate-title">Certificate Verification</h3>
+          </div>
+
+          <div class="verification-content">
+            <div class="verification-item">
+              <div class="verification-header">
+                <i class="fas fa-id-card"></i>
+                <span>Verification Process</span>
+              </div>
+              <p>
+                To verify this certificate, use the Certificate ID:
+                <strong th:text="${certificate.id}">CERT-ID</strong>
+              </p>
+            </div>
+
+            <div class="verification-item">
+              <div class="verification-header">
+                <i class="fas fa-check"></i>
+                <span>Digital Signature</span>
+              </div>
+              <p>
+                This certificate contains a digital signature that ensures its
+                authenticity and prevents tampering.
+              </p>
+            </div>
+
+            <div class="verification-item">
+              <div class="verification-header">
+                <i class="fas fa-calendar"></i>
+                <span>Validity</span>
+              </div>
+              <p>
+                This certificate is valid indefinitely and represents the
+                successful completion of the specified course.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>&copy; 2025 Jnana. All rights reserved.</footer>
+
+    <script>
+      function closeAlert(alertId) {
+        document.getElementById(alertId).style.display = "none";
+      }
+
+      setTimeout(function () {
+        var successAlert = document.getElementById("successAlert");
+        var errorAlert = document.getElementById("errorAlert");
+
+        if (successAlert) {
+          successAlert.style.display = "none";
+        }
+        if (errorAlert) {
+          errorAlert.style.display = "none";
+        }
+      }, 5000);
+
+      // Auto-focus on certificate for screen readers
+      document.addEventListener("DOMContentLoaded", function () {
+        const certificateCard = document.querySelector(".certificate-card");
+        if (certificateCard) {
+          certificateCard.focus();
+        }
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        // Ctrl+P or Cmd+P for print
+        if ((e.ctrlKey || e.metaKey) && e.key === "p") {
+          e.preventDefault();
+          window.print();
+        }
+
+        // Escape key to close
+        if (e.key === "Escape") {
+          window.close();
+        }
+      });
+    </script>
+
+    <style>
+      .info-content {
+        padding: 0;
+      }
+
+      .info-item {
+        background-color: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+      }
+
+      .info-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .info-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: #64ffda;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .info-item p {
+        color: #b0b0b0;
+        font-size: 12px;
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      .info-item i {
+        font-size: 14px;
+      }
+
+      .verification-content {
+        padding: 0;
+      }
+
+      .verification-item {
+        background-color: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+      }
+
+      .verification-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .verification-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: #64ffda;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .verification-item p {
+        color: #b0b0b0;
+        font-size: 12px;
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      .verification-item strong {
+        color: #64ffda;
+        font-weight: 600;
+      }
+
+      .verification-item i {
+        font-size: 14px;
+      }
+
+      /* Enhanced certificate styling */
+      .certificate-body {
+        background: linear-gradient(
+          135deg,
+          rgba(100, 255, 218, 0.02) 0%,
+          rgba(79, 211, 184, 0.02) 100%
+        );
+        border: 2px solid #555555;
+      }
+
+      .detail-item {
+        transition: all 0.3s ease;
+      }
+
+      .detail-item:hover {
+        border-color: #64ffda;
+        transform: translateY(-1px);
+      }
+
+      /* Animation for certificate appearance */
+      .certificate-card {
+        animation: slideInUp 0.6s ease-out;
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Enhanced print styles */
+      @media print {
+        .certificate-container {
+          max-width: none;
+        }
+
+        .certificate-card:not(:first-child) {
+          display: none !important;
+        }
+
+        .certificate-card {
+          margin: 0;
+          padding: 40px;
+          border-radius: 0;
+        }
+
+        .certificate-title {
+          font-size: 28px;
+        }
+
+        .detail-value {
+          font-size: 16px;
+        }
+
+        .signature-name {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </body>
+</html>

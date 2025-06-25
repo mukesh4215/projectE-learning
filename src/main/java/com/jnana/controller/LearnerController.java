@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/learner")
 public class LearnerController {
+
 	@Autowired
 	LearnerService learnerService;
 
@@ -32,25 +33,25 @@ public class LearnerController {
 	}
 
 	@GetMapping("/enroll/{id}")
-	public String enrollCourse(HttpSession session, @PathVariable Long id,Model model) {
-		return learnerService.enrollCourse(session, id,model);
+	public String enrollCourse(HttpSession session, @PathVariable Long id, Model model) {
+		return learnerService.enrollCourse(session, id, model);
 	}
-	
+
 	@GetMapping("/enrolled-courses")
 	public String viewEnrolledCourses(HttpSession session, Model model) {
 		return learnerService.viewEnrolledCourses(session, model);
 	}
-	
+
 	@PostMapping("/enroll-paidcourse/{id}")
 	public String enrollPaidCourse(HttpSession session, @PathVariable Long id, Model model) {
 		return learnerService.enrollPaidCourse(session, id, model);
 	}
-
+	
 	@GetMapping("/view-enrolled-sections/{id}")
 	public String viewEnrolledSections(HttpSession session, @PathVariable Long id, Model model) {
 		return learnerService.viewEnrolledSections(session, id, model);
 	}
-	
+
 	@GetMapping("/view-video/{id}")
 	public String viewVideo(HttpSession session, @PathVariable Long id, Model model) {
 		return learnerService.viewVideo(session, id, model);
@@ -60,10 +61,26 @@ public class LearnerController {
 	public String loadSectionQuiz(@PathVariable Long id, HttpSession session, Model model) {
 		return learnerService.loadSectionQuiz(id, session, model);
 	}
-	
+
 	@PostMapping("/section/quiz/{id}")
 	public String sectionQuizSubmit(@PathVariable Long id, HttpSession session,
 			@RequestParam Map<String, String> quiz) {
 		return learnerService.submitQuiz(id, session, quiz);
+	}
+
+	@GetMapping("/course/quiz/{id}")
+	public String takeQuiz(@PathVariable Long id, HttpSession session, Model model) {
+		return learnerService.loadCourseQuiz(id, session, model);
+	}
+
+	@PostMapping("/course/quiz/{id}")
+	public String submitCourseQuiz(@PathVariable Long id, HttpSession session,
+			@RequestParam Map<String, String> quiz) {
+		return learnerService.submitCourseQuiz(id, session, quiz);
+	}
+
+	@GetMapping("/certificate/{id}")
+	public String viewCertificate(@PathVariable Long id, HttpSession session, Model model) {
+		return learnerService.viewCertificate(id, session, model);
 	}
 }

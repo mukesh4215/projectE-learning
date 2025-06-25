@@ -1,909 +1,430 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register - Jnana</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet" />
-  <link rel="shortcut icon" href="https://yogastudies.org/wp-content/uploads/jnana.jpg" type="image/x-icon" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --secondary: #7c3aed;
-      --accent: #f59e0b;
-      --success: #059669;
-      --error: #dc2626;
-      --text-primary: #1e293b;
-      --text-secondary: #64748b;
-      --text-light: #94a3b8;
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8fafc;
-      --bg-dark: #0f172a;
-      --border: #e2e8f0;
-      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --gradient-hero: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%);
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: "Poppins", sans-serif;
-      line-height: 1.4;
-      color: var(--text-primary);
-      background: var(--gradient-hero);
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Navigation - Compact */
-    .navbar {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 0.5rem 0;
-      flex-shrink: 0;
-    }
-
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .logo i {
-      font-size: 1.25rem;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .nav-btn {
-      padding: 0.5rem 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      font-size: 0.875rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .nav-login {
-      color: var(--text-secondary);
-    }
-
-    .nav-login:hover {
-      color: var(--primary);
-      background: rgba(37, 99, 235, 0.1);
-    }
-
-    /* Main Container */
-    .main-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      min-height: 0;
-    }
-
-    /* Registration Form Container - Compact */
-    .register-section {
-      width: 100%;
-      max-width: 450px;
-      padding: 2rem;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 1rem;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(20px);
-      animation: fadeInUp 0.6s ease-out;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .register-section::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--gradient-primary);
-    }
-
-    .register-section h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
-      text-align: center;
-      letter-spacing: -0.02em;
-    }
-
-    .register-subtitle {
-      text-align: center;
-      color: var(--text-secondary);
-      margin-bottom: 1.5rem;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-      position: relative;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 2px solid var(--border);
-      border-radius: 0.5rem;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: inherit;
-    }
-
-    .form-group input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-      outline: none;
-      transform: translateY(-1px);
-    }
-
-    .form-group input::placeholder {
-      color: var(--text-light);
-      font-size: 0.85rem;
-    }
-
-    .radio-group {
-      display: flex;
-      justify-content: center;
-      gap: 0.75rem;
-      margin: 1.25rem 0;
-    }
-
-    .radio-option {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.7);
-      border: 2px solid transparent;
-      font-weight: 500;
-      color: var(--text-secondary);
-      min-width: 100px;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      font-size: 0.85rem;
-    }
-
-    .radio-option:hover {
-      background: rgba(37, 99, 235, 0.1);
-      border-color: var(--primary);
-      color: var(--primary);
-      transform: translateY(-2px);
-    }
-
-    .radio-option input[type="radio"] {
-      display: none;
-    }
-
-    .radio-option input[type="radio"]:checked+.radio-content {
-      color: var(--primary);
-    }
-
-    .radio-option:has(input[type="radio"]:checked) {
-      background: rgba(37, 99, 235, 0.1);
-      border-color: var(--primary);
-      color: var(--primary);
-      box-shadow: var(--shadow);
-    }
-
-    .radio-content {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: color 0.3s ease;
-    }
-
-    .radio-content i {
-      font-size: 0.9rem;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 0.875rem 2rem;
-      border: none;
-      border-radius: 0.5rem;
-      background: var(--primary);
-      color: white;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 1rem;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font-family: inherit;
-    }
-
-    .submit-btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .submit-btn:active {
-      transform: translateY(-1px);
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .error {
-      color: var(--error);
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-      display: block;
-      font-weight: 500;
-      min-height: 1rem;
-    }
-
-    .login-link {
-      text-align: center;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .login-link p {
-      font-size: 0.85rem;
-    }
-
-    .login-link a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .login-link a:hover {
-      color: var(--primary-dark);
-      text-decoration: underline;
-    }
-
-    /* Toast Notifications - Fixed positioning */
-    .toast-container {
-      position: fixed;
-      top: 80px;
-      right: 1rem;
-      z-index: 1001;
-      max-width: 350px;
-    }
-
-    .toast {
-      background: white;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      box-shadow: var(--shadow-lg);
-      border-left: 4px solid var(--success);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      animation: slideIn 0.4s ease;
-      font-size: 0.85rem;
-    }
-
-    .toast.error {
-      border-left-color: var(--error);
-    }
-
-    .toast-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      color: white;
-      background: var(--success);
-      flex-shrink: 0;
-    }
-
-    .toast.error .toast-icon {
-      background: var(--error);
-    }
-
-    .toast-message {
-      flex: 1;
-      font-size: 0.85rem;
-      color: var(--text-primary);
-      font-weight: 500;
-    }
-
-    .toast-close {
-      background: none;
-      border: none;
-      color: var(--text-light);
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0.25rem;
-      border-radius: 0.25rem;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .toast-close:hover {
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Jnana</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-
-      to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-    }
-
-    @keyframes ripple {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
-    }
-
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.6);
-      transform: scale(0);
-      animation: ripple 0.6s linear;
-      pointer-events: none;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .nav-container {
-        padding: 0 1rem;
-      }
-
-      .main-container {
-        padding: 0.5rem;
-      }
-
-      .register-section {
-        max-width: 100%;
-        padding: 1.5rem;
-      }
-
-      .register-section h1 {
-        font-size: 1.75rem;
-      }
-
-      .radio-group {
+      body {
+        font-family: "Quicksand", sans-serif;
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+        height: 100vh;
+        display: flex;
         flex-direction: column;
-        gap: 0.5rem;
       }
 
-      .radio-option {
-        min-width: auto;
-      }
-
-      .toast-container {
-        right: 0.5rem;
-        left: 0.5rem;
-        max-width: none;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .nav-container {
-        padding: 0 0.75rem;
+      header {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
       }
 
       .logo {
-        font-size: 1.25rem;
+        font-size: 24px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #64ffda;
+        letter-spacing: 1px;
       }
 
-      .nav-btn {
-        padding: 0.4rem 0.75rem;
-        font-size: 0.8rem;
+      .logo:hover {
+        color: #4fd3b8;
       }
 
-      .register-section {
-        padding: 1.25rem;
+      nav a {
+        background-color: #3d3d3d;
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 12px;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 14px;
+        border: 2px solid #555555;
+        transition: all 0.3s ease;
       }
 
-      .register-section h1 {
-        font-size: 1.5rem;
+      nav a:hover {
+        background-color: #64ffda;
+        color: #1a1a1a;
+        border-color: #64ffda;
       }
 
-      .form-group input {
-        padding: 0.625rem 0.875rem;
-        font-size: 0.85rem;
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        overflow-y: auto;
       }
 
-      .submit-btn {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-height: 700px) {
-      .register-section {
-        padding: 1.5rem;
-      }
-
-      .register-section h1 {
-        font-size: 1.75rem;
-        margin-bottom: 0.25rem;
+      .register-container {
+        background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+        border: 1px solid #444444;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        padding: 30px;
+        width: 100%;
+        max-width: 400px;
       }
 
-      .register-subtitle {
-        margin-bottom: 1rem;
-        font-size: 0.85rem;
-      }
-
-      .form-group {
-        margin-bottom: 0.75rem;
-      }
-
-      .form-group input {
-        padding: 0.625rem 0.875rem;
-      }
-
-      .radio-group {
-        margin: 1rem 0;
-      }
-
-      .radio-option {
-        padding: 0.625rem 0.875rem;
-      }
-
-      .login-link {
-        margin-top: 1rem;
-        padding-top: 1rem;
-      }
-    }
-
-    @media (max-height: 600px) {
-      .navbar {
-        padding: 0.25rem 0;
-      }
-
-      .register-section {
-        padding: 1rem;
-      }
-
-      .register-section h1 {
-        font-size: 1.5rem;
-        margin-bottom: 0.125rem;
+      .register-container h1 {
+        text-align: center;
+        margin-bottom: 8px;
+        color: #64ffda;
+        font-size: 28px;
+        font-weight: 700;
       }
 
       .register-subtitle {
-        margin-bottom: 0.75rem;
-        font-size: 0.8rem;
+        text-align: center;
+        color: #b0b0b0;
+        margin-bottom: 25px;
+        font-size: 14px;
+        line-height: 1.4;
       }
 
       .form-group {
-        margin-bottom: 0.5rem;
+        margin-bottom: 15px;
       }
 
       .form-group input {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.85rem;
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #555555;
+        border-radius: 15px;
+        font-size: 14px;
+        background-color: #3d3d3d;
+        color: #ffffff;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 500;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #64ffda;
+        background-color: #444444;
+      }
+
+      .form-group input::placeholder {
+        color: #888888;
+        font-weight: 400;
       }
 
       .radio-group {
-        margin: 0.75rem 0;
-        gap: 0.5rem;
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+        justify-content: center;
       }
 
       .radio-option {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 10px 15px;
+        border: 2px solid #555555;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        background-color: #3d3d3d;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .radio-option:hover {
+        border-color: #64ffda;
+        background-color: #444444;
+      }
+
+      .radio-option input[type="radio"] {
+        margin: 0;
+        accent-color: #64ffda;
+      }
+
+      .radio-option input[type="radio"]:checked + .radio-content {
+        color: #64ffda;
+      }
+
+      .radio-option:has(input[type="radio"]:checked) {
+        border-color: #64ffda;
+        background-color: #444444;
+      }
+
+      .radio-content {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 500;
+        font-size: 14px;
+        color: #ffffff;
       }
 
       .submit-btn {
-        padding: 0.625rem 1.25rem;
-        margin-top: 0.75rem;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 15px;
+        background-color: #64ffda;
+        color: #1a1a1a;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        font-family: "Quicksand", sans-serif;
       }
 
-      .login-link {
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
+      .submit-btn:hover {
+        background-color: #4fd3b8;
+        transform: translateY(-2px);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
       }
 
       .error {
-        font-size: 0.7rem;
-        min-height: 0.75rem;
+        color: #f56565;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+        font-weight: 500;
       }
-    }
 
-    /* Custom scrollbar - just in case */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #444444;
+      }
 
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
+      .login-link p {
+        font-size: 14px;
+        color: #b0b0b0;
+        font-weight: 400;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: rgba(37, 99, 235, 0.3);
-      border-radius: 3px;
-    }
+      .login-link a {
+        color: #64ffda;
+        text-decoration: none;
+        font-weight: 600;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(37, 99, 235, 0.5);
-    }
+      .login-link a:hover {
+        color: #4fd3b8;
+        text-decoration: underline;
+      }
 
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
-</head>
+      footer {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        text-align: center;
+        padding: 12px;
+        border-radius: 15px 15px 0 0;
+        font-weight: 500;
+        border-top: 1px solid #444444;
+        font-size: 14px;
+        margin-top: auto;
+      }
 
-<body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="/" class="logo">
-        <i class="fas fa-graduation-cap"></i>
-        <span>Jnana</span>
-      </a>
-      <div class="nav-links">
-        <a href="/login" class="nav-btn nav-login">
-          <i class="fas fa-sign-in-alt"></i>
-          <span>Login</span>
-        </a>
-      </div>
+      .alert {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        color: white;
+        min-width: 280px;
+        z-index: 1000;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .alert-success {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        border: 2px solid #4caf50;
+      }
+
+      .alert-error {
+        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        border: 2px solid #f44336;
+      }
+
+      .alert-close {
+        float: right;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 12px;
+        padding: 4px 8px;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+
+      .alert-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div th:if="${session.pass}" class="alert alert-success" id="successAlert">
+      <span th:text="${session.pass}">Success message</span>
+      <button class="alert-close" onclick="closeAlert('successAlert')">
+        &times;
+      </button>
     </div>
-  </nav>
 
-  <!-- Main Container -->
-  <div class="main-container">
-    <!-- Registration Form -->
-    <div class="register-section">
-      <h1>Create Account</h1>
-      <p class="register-subtitle">
-        Join thousands of learners and start your journey today
-      </p>
-
-      <form action="/register" method="post" th:object="${userDto}">
-        <div class="form-group">
-          <input type="text" th:field="*{name}" placeholder="Full Name" required />
-          <span class="error" th:errors="*{name}"></span>
-        </div>
-
-        <div class="form-group">
-          <input type="email" th:field="*{email}" placeholder="Email Address" required />
-          <span class="error" th:errors="*{email}"></span>
-        </div>
-
-        <div class="form-group">
-          <input type="text" th:field="*{mobile}" placeholder="Mobile Number" required />
-          <span class="error" th:errors="*{mobile}"></span>
-        </div>
-
-        <div class="form-group">
-          <input type="password" th:field="*{password}" placeholder="Password" required />
-          <span class="error" th:errors="*{password}"></span>
-        </div>
-
-        <div class="form-group">
-          <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password" required />
-          <span class="error" th:errors="*{confirmPassword}"></span>
-        </div>
-
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" th:field="*{type}" value="TUTOR" required />
-            <div class="radio-content">
-              <i class="fas fa-chalkboard-teacher"></i>
-              <span>Tutor</span>
-            </div>
-          </label>
-          <label class="radio-option">
-            <input type="radio" th:field="*{type}" value="LEARNER" required />
-            <div class="radio-content">
-              <i class="fas fa-user-graduate"></i>
-              <span>Learner</span>
-            </div>
-          </label>
-        </div>
-        <span class="error" th:errors="*{type}"></span>
-
-        <button type="submit" class="submit-btn">
-          <i class="fas fa-user-plus"></i>
-          <span>Create Account</span>
-        </button>
-      </form>
-
-      <div class="login-link">
-        <p>Already have an account? <a href="/login">Sign in here</a></p>
-      </div>
+    <div th:if="${session.fail}" class="alert alert-error" id="errorAlert">
+      <span th:text="${session.fail}">Error message</span>
+      <button class="alert-close" onclick="closeAlert('errorAlert')">
+        &times;
+      </button>
     </div>
-  </div>
 
-  <!-- Toast Notifications -->
-  <div class="toast-container">
-    <div id="successToast" class="toast success" th:if="${session.pass}" style="display: none">
-      <div class="toast-icon">
-        <i class="fas fa-check"></i>
-      </div>
-      <span class="toast-message" th:text="${session.pass}">Success message</span>
-      <button class="toast-close">&times;</button>
-    </div>
-    <div id="errorToast" class="toast error" th:if="${session.fail}" style="display: none">
-      <div class="toast-icon">
-        <i class="fas fa-exclamation"></i>
-      </div>
-      <span class="toast-message" th:text="${session.fail}">Error message</span>
-      <button class="toast-close">&times;</button>
-    </div>
     <th:block th:text="${@generalService.removeMessage()}"></th:block>
-  </div>
 
-  <script>
-    // Toast notification functionality
-    function removeToast(toast) {
-      toast.style.animation = "slideOut 0.3s ease forwards";
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast);
+    <!-- Header -->
+    <header>
+      <a href="/" class="logo">Jnana</a>
+      <nav>
+        <a href="/login">Login</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="register-container">
+        <h1>Create Account</h1>
+        <p class="register-subtitle">
+          Join thousands of learners and start your journey today
+        </p>
+
+        <form action="/register" method="post" th:object="${userDto}">
+          <div class="form-group">
+            <input
+              type="text"
+              th:field="*{name}"
+              placeholder="Full Name"
+              required
+            />
+            <span class="error" th:errors="*{name}"></span>
+          </div>
+
+          <div class="form-group">
+            <input
+              type="email"
+              th:field="*{email}"
+              placeholder="Email Address"
+              required
+            />
+            <span class="error" th:errors="*{email}"></span>
+          </div>
+
+          <div class="form-group">
+            <input
+              type="text"
+              th:field="*{mobile}"
+              placeholder="Mobile Number"
+              required
+            />
+            <span class="error" th:errors="*{mobile}"></span>
+          </div>
+
+          <div class="form-group">
+            <input
+              type="password"
+              th:field="*{password}"
+              placeholder="Password"
+              required
+            />
+            <span class="error" th:errors="*{password}"></span>
+          </div>
+
+          <div class="form-group">
+            <input
+              type="password"
+              th:field="*{confirmPassword}"
+              placeholder="Confirm Password"
+              required
+            />
+            <span class="error" th:errors="*{confirmPassword}"></span>
+          </div>
+
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" th:field="*{type}" value="TUTOR" required />
+              <div class="radio-content">
+                <span>Tutor</span>
+              </div>
+            </label>
+            <label class="radio-option">
+              <input type="radio" th:field="*{type}" value="LEARNER" required />
+              <div class="radio-content">
+                <span>Learner</span>
+              </div>
+            </label>
+          </div>
+          <span class="error" th:errors="*{type}"></span>
+
+          <button type="submit" class="submit-btn">Create Account</button>
+        </form>
+
+        <div class="login-link">
+          <p>Already have an account? <a href="/login">Sign in here</a></p>
+        </div>
+      </div>
+    </div>
+
+    <footer>&copy; 2025 Jnana. All rights reserved.</footer>
+
+    <script>
+      function closeAlert(alertId) {
+        document.getElementById(alertId).style.display = "none";
+      }
+
+      setTimeout(function () {
+        var successAlert = document.getElementById("successAlert");
+        var errorAlert = document.getElementById("errorAlert");
+
+        if (successAlert) {
+          successAlert.style.display = "none";
         }
-      }, 300);
-    }
-
-    // Show existing toasts
-    document.addEventListener("DOMContentLoaded", function () {
-      const successToast = document.getElementById("successToast");
-      const errorToast = document.getElementById("errorToast");
-
-      if (successToast && successToast.querySelector(".toast-message").textContent.trim()) {
-        successToast.style.display = "flex";
-        setTimeout(() => removeToast(successToast), 5000);
-      }
-
-      if (errorToast && errorToast.querySelector(".toast-message").textContent.trim()) {
-        errorToast.style.display = "flex";
-        setTimeout(() => removeToast(errorToast), 5000);
-      }
-
-      // Close button functionality for existing toasts
-      document.querySelectorAll(".toast-close").forEach((closeBtn) => {
-        closeBtn.addEventListener("click", function () {
-          const toast = this.closest(".toast");
-          removeToast(toast);
-        });
-      });
-    });
-
-    // Form validation and enhancement
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.querySelector("form");
-      const inputs = form.querySelectorAll("input");
-      const submitBtn = form.querySelector(".submit-btn");
-
-      // Add input validation styling
-      inputs.forEach((input) => {
-        input.addEventListener("blur", function () {
-          if (this.value.trim() !== "") {
-            this.style.borderColor = "var(--success)";
-            this.style.boxShadow = "0 0 0 3px rgba(5, 150, 105, 0.1)";
-          } else if (this.hasAttribute("required")) {
-            this.style.borderColor = "var(--error)";
-            this.style.boxShadow = "0 0 0 3px rgba(220, 38, 38, 0.1)";
-          }
-        });
-
-        input.addEventListener("focus", function () {
-          this.style.borderColor = "var(--primary)";
-          this.style.boxShadow = "0 0 0 3px rgba(37, 99, 235, 0.1)";
-        });
-
-        input.addEventListener("input", function () {
-          if (this.style.borderColor === "rgb(220, 38, 38)") {
-            this.style.borderColor = "var(--border)";
-            this.style.boxShadow = "none";
-          }
-        });
-      });
-
-      // Add loading state to submit button
-      form.addEventListener("submit", function () {
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Creating Account...</span>';
-        submitBtn.disabled = true;
-      });
-
-      // Radio button enhancement
-      const radioOptions = document.querySelectorAll(".radio-option");
-      radioOptions.forEach((option) => {
-        option.addEventListener("click", function () {
-          const radio = this.querySelector('input[type="radio"]');
-          radio.checked = true;
-
-          // Update visual state
-          radioOptions.forEach((opt) => opt.classList.remove("selected"));
-          this.classList.add("selected");
-        });
-      });
-    });
-
-    // Add ripple effect to submit button
-    document.querySelector(".submit-btn").addEventListener("click", function (e) {
-      const ripple = document.createElement("span");
-      const rect = this.getBoundingClientRect();
-      const size = Math.max(rect.width, rect.height);
-      const x = e.clientX - rect.left - size / 2;
-      const y = e.clientY - rect.top - size / 2;
-
-      ripple.className = "ripple";
-      ripple.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${x}px;
-        top: ${y}px;
-      `;
-
-      this.style.position = "relative";
-      this.style.overflow = "hidden";
-      this.appendChild(ripple);
-
-      setTimeout(() => {
-        ripple.remove();
-      }, 600);
-    });
-
-    // Add hover effects to radio options
-    document.querySelectorAll(".radio-option").forEach((option) => {
-      option.addEventListener("mouseenter", function () {
-        if (!this.classList.contains("selected")) {
-          this.style.transform = "translateY(-2px)";
+        if (errorAlert) {
+          errorAlert.style.display = "none";
         }
-      });
-
-      option.addEventListener("mouseleave", function () {
-        if (!this.classList.contains("selected")) {
-          this.style.transform = "translateY(0)";
-        }
-      });
-    });
-
-    // Password strength indicator
-    const passwordInput = document.querySelector('input[type="password"]');
-    if (passwordInput) {
-      passwordInput.addEventListener("input", function () {
-        const password = this.value;
-        const strength = getPasswordStrength(password);
-
-        if (strength >= 3) {
-          this.style.borderColor = "var(--success)";
-        } else if (strength >= 2) {
-          this.style.borderColor = "var(--accent)";
-        } else if (password.length > 0) {
-          this.style.borderColor = "var(--error)";
-        }
-      });
-    }
-
-    function getPasswordStrength(password) {
-      let strength = 0;
-      if (password.length >= 8) strength++;
-      if (/[a-z]/.test(password)) strength++;
-      if (/[A-Z]/.test(password)) strength++;
-      if (/[0-9]/.test(password)) strength++;
-      if (/[^A-Za-z0-9]/.test(password)) strength++;
-      return strength;
-    }
-
-    // Add CSS for selected radio option
-    const style = document.createElement("style");
-    style.textContent = `
-      .radio-option.selected {
-        background: rgba(37, 99, 235, 0.15) !important;
-        border-color: var(--primary) !important;
-        color: var(--primary) !important;
-        box-shadow: var(--shadow) !important;
-        transform: translateY(-2px) !important;
-      }
-      
-      .form-group input.valid {
-        border-color: var(--success) !important;
-        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1) !important;
-      }
-      
-      .form-group input.invalid {
-        border-color: var(--error) !important;
-        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Add smooth transitions to all interactive elements
-    document.querySelectorAll(".form-group input, .radio-option, .submit-btn").forEach((el) => {
-      el.style.transition = "all 0.3s ease";
-    });
-
-    // Prevent any potential scrolling
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-  </script>
-</body>
+      }, 5000);
+    </script>
+  </body>
 </html>

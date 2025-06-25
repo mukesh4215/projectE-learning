@@ -155,10 +155,11 @@ public class GeneralService {
 		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
 		ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
 		HttpServletRequest request = attributes.getRequest();
-		HttpSession session = request.getSession(true);
-
+		HttpSession session = request.getSession(false);
+		if(session != null){
 		session.removeAttribute("pass");
 		session.removeAttribute("fail");
+		}
 	}
 
 	public String resendOtp(HttpSession session) {

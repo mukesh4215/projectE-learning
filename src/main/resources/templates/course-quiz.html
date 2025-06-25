@@ -3,12 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Section Quiz - Jnana</title>
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Course Final Quiz - Jnana</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -165,6 +162,24 @@
         font-weight: 400;
       }
 
+      .warning-box {
+        background: rgba(255, 152, 0, 0.1);
+        border: 1px solid #ff9800;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #ffb74d;
+      }
+
+      .warning-box i {
+        margin-right: 8px;
+        color: #ff9800;
+      }
+
+      .warning-box strong {
+        color: #ff9800;
+      }
+
       .questions-section {
         margin-bottom: 20px;
       }
@@ -175,6 +190,7 @@
         border-radius: 12px;
         padding: 18px;
         margin-bottom: 15px;
+        border-left: 4px solid #64ffda;
       }
 
       .question-header {
@@ -213,7 +229,7 @@
         border-radius: 10px;
         font-size: 13px;
         resize: vertical;
-        min-height: 80px;
+        min-height: 100px;
         transition: border-color 0.3s ease;
         font-family: "Quicksand", sans-serif;
         background: #2d2d2d;
@@ -265,6 +281,8 @@
       .btn-submit {
         background-color: #4caf50;
         color: white;
+        font-size: 14px;
+        padding: 14px 24px;
       }
 
       .btn-submit:hover {
@@ -412,6 +430,9 @@
         font-weight: 900;
       }
 
+      .fa-graduation-cap:before {
+        content: "\f19d";
+      }
       .fa-question-circle:before {
         content: "\f059";
       }
@@ -420,6 +441,9 @@
       }
       .fa-percentage:before {
         content: "\f295";
+      }
+      .fa-trophy:before {
+        content: "\f091";
       }
       .fa-paper-plane:before {
         content: "\f1d8";
@@ -461,20 +485,16 @@
     <header>
       <a href="/learner/home" class="logo">Jnana</a>
       <nav>
-        <a th:href="@{'/learner/view-enrolled-sections/' + ${id}}"
-          >Back to Sections</a
-        >
         <a href="/learner/enrolled-courses">My Courses</a>
+        <a href="/learner/home">Dashboard</a>
         <a href="/logout">Logout</a>
       </nav>
     </header>
 
     <!-- Hero Section -->
     <div class="hero">
-      <h1>Section Quiz</h1>
-      <p th:text="'Test your knowledge of: ' + ${section.section.title}">
-        Test your knowledge of the section material
-      </p>
+      <h1><i class="fas fa-graduation-cap"></i> Course Final Quiz</h1>
+      <p>Test your comprehensive knowledge of the entire course material</p>
 
       <div class="quiz-info">
         <div class="info-item">
@@ -482,12 +502,16 @@
           <span class="info-label">Questions</span>
         </div>
         <div class="info-item">
-          <span class="info-number">30</span>
+          <span class="info-number">60</span>
           <span class="info-label">Minutes</span>
         </div>
         <div class="info-item">
-          <span class="info-number">70%</span>
+          <span class="info-number">80%</span>
           <span class="info-label">Pass Mark</span>
+        </div>
+        <div class="info-item">
+          <span class="info-number">Final</span>
+          <span class="info-label">Assessment</span>
         </div>
       </div>
     </div>
@@ -499,15 +523,22 @@
         <div class="quiz-card">
           <!-- Quiz Header -->
           <div class="quiz-header">
-            <h2 class="quiz-title" th:text="${section.section.title + ' Quiz'}">
-              Section Quiz
+            <h2
+              class="quiz-title"
+              th:text="${course.title + ' - Final Assessment'}"
+            >
+              Course Final Assessment
             </h2>
+            <p class="quiz-subtitle">
+              This quiz covers all sections and topics from the course
+            </p>
           </div>
+
 
           <!-- Quiz Form -->
           <form
             th:if="${questions != null and !questions.empty}"
-            th:action="@{'/learner/section/quiz/' + ${section.id}}"
+            th:action="@{'/learner/course/quiz/' + ${course.id}}"
             method="post"
           >
             <!-- Questions Section -->
@@ -531,12 +562,12 @@
                 <textarea
                   class="answer-input"
                   th:name="${question.id}"
-                  th:placeholder="'Type your answer for question ' + ${iterStat.index + 1} + ' here...'"
+                  th:placeholder="'Provide a comprehensive answer for question ' + ${iterStat.index + 1} + '...'"
                   required
                 ></textarea>
 
                 <div class="character-count">
-                  <span>Maximum 500 characters</span>
+                  <span>Maximum 1000 characters for detailed answers</span>
                 </div>
               </div>
             </div>
@@ -545,13 +576,10 @@
             <div class="submit-section">
               <button type="submit" class="btn btn-submit">
                 <i class="fas fa-paper-plane"></i>
-                <span>Submit Quiz</span>
+                <span>Submit Final Quiz</span>
               </button>
 
-              <a
-                th:href="@{'/learner/view-enrolled-sections/' + ${id}}"
-                class="btn btn-back"
-              >
+              <a href="/learner/enrolled-courses" class="btn btn-back">
                 <i class="fas fa-arrow-left"></i>
                 <span>Cancel</span>
               </a>
@@ -564,17 +592,15 @@
             th:if="${questions == null or questions.empty}"
           >
             <i class="fas fa-exclamation-triangle"></i>
-            <h3>No Quiz Available</h3>
+            <h3>Final Quiz Not Available</h3>
             <p>
-              This section doesn't have a quiz yet. The instructor may add one
-              later. You can continue with other section materials.
+              The final course quiz hasn't been created yet. The instructor may
+              add it later. You can continue studying the course materials in
+              the meantime.
             </p>
-            <a
-              th:href="@{'/learner/view-enrolled-sections/' + ${section.course.id}}"
-              class="empty-action"
-            >
+            <a href="/learner/enrolled-courses" class="empty-action">
               <i class="fas fa-arrow-left"></i>
-              <span>Back to Sections</span>
+              <span>Back to My Courses</span>
             </a>
           </div>
 
@@ -583,12 +609,9 @@
             class="back-section"
             th:if="${questions != null and !questions.empty}"
           >
-            <a
-              th:href="@{'/learner/view-enrolled-sections/' + ${id}}"
-              class="btn btn-back"
-            >
+            <a href="/learner/enrolled-courses" class="btn btn-back">
               <i class="fas fa-arrow-left"></i>
-              <span>Back to Sections</span>
+              <span>Back to My Courses</span>
             </a>
           </div>
         </div>
@@ -599,40 +622,92 @@
           th:if="${questions != null and !questions.empty}"
         >
           <div class="quiz-header">
-            <h3 class="quiz-title">Quiz Instructions</h3>
+            <h3 class="quiz-title">Final Quiz Instructions</h3>
           </div>
 
           <div class="instructions-content">
             <div class="instruction-item">
               <div class="instruction-header">
                 <i class="fas fa-clock"></i>
-                <span>Time Limit</span>
+                <span>Extended Time Limit</span>
               </div>
               <p>
-                You have 30 minutes to complete this quiz. Make sure you have
-                enough time before starting.
+                You have 60 minutes to complete this comprehensive final quiz.
+                This is longer than section quizzes to allow for thorough
+                answers.
               </p>
             </div>
 
             <div class="instruction-item">
               <div class="instruction-header">
                 <i class="fas fa-percentage"></i>
-                <span>Passing Score</span>
+                <span>Higher Passing Score</span>
               </div>
               <p>
-                You need to score at least 70% to pass this quiz. Take your time
-                to think through each answer.
+                You need to score at least 80% to pass this final assessment.
+                This demonstrates mastery of the entire course content.
+              </p>
+            </div>
+
+            <div class="instruction-item">
+              <div class="instruction-header">
+                <i class="fas fa-trophy"></i>
+                <span>Course Completion</span>
+              </div>
+              <p>
+                Successfully passing this quiz will complete your course and
+                unlock your certificate of completion.
               </p>
             </div>
 
             <div class="instruction-item">
               <div class="instruction-header">
                 <i class="fas fa-question-circle"></i>
-                <span>Answer Format</span>
+                <span>Answer Quality</span>
               </div>
               <p>
-                Provide clear, concise answers. You can write up to 500
-                characters per question.
+                Provide detailed, well-thought-out answers. You can write up to
+                1000 characters per question to fully explain your
+                understanding.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course Progress Card -->
+        <div
+          class="quiz-card"
+          th:if="${questions != null and !questions.empty}"
+        >
+          <div class="quiz-header">
+            <h3 class="quiz-title">Course Progress Summary</h3>
+          </div>
+
+          <div class="progress-summary">
+            <div class="progress-item">
+              <div class="progress-header">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Course</span>
+              </div>
+              <p th:text="${course.title}">Course Name</p>
+            </div>
+
+            <div class="progress-item">
+              <div class="progress-header">
+                <i class="fas fa-check"></i>
+                <span>Sections Completed</span>
+              </div>
+              <p>All sections must be completed before taking the final quiz</p>
+            </div>
+
+            <div class="progress-item">
+              <div class="progress-header">
+                <i class="fas fa-trophy"></i>
+                <span>Final Step</span>
+              </div>
+              <p>
+                This quiz is the final step to earn your course completion
+                certificate
               </p>
             </div>
           </div>
@@ -696,6 +771,43 @@
       }
 
       .instruction-item i {
+        font-size: 14px;
+      }
+
+      .progress-summary {
+        padding: 0;
+      }
+
+      .progress-item {
+        background-color: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+      }
+
+      .progress-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .progress-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: #64ffda;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .progress-item p {
+        color: #b0b0b0;
+        font-size: 12px;
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      .progress-item i {
         font-size: 14px;
       }
     </style>

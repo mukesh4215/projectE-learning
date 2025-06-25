@@ -1,168 +1,615 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment - Jnana</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="https://yogastudies.org/wp-content/uploads/jnana.jpg" type="image/x-icon">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --text-color: #2c3e50;
-            --shadow-color: rgba(0,0,0,0.1);
-            --bg-light: #f5f7fa;
-            --accent-color: #ff5722;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+      body {
+        font-family: "Quicksand", sans-serif;
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-        body {
-            background: var(--bg-light);
-            min-height: 100vh;
-            padding-top: 100px;
-            display: flex;
-            flex-direction: column;
-        }
+      header {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1.2rem 5%;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .logo {
+        font-size: 20px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #64ffda;
+        letter-spacing: 1px;
+      }
 
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
-            letter-spacing: 1px;
-        }
+      .logo:hover {
+        color: #4fd3b8;
+      }
 
-        .container {
-            width: 90%;
-            max-width: 500px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px var(--shadow-color);
-            text-align: center;
-            animation: slideUp 0.5s ease-out;
-        }
+      nav a {
+        background-color: #3d3d3d;
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 12px;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 13px;
+        border: 2px solid #555555;
+        transition: all 0.3s ease;
+      }
 
-        .payment-info {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: var(--bg-light);
-            border-radius: 15px;
-        }
+      nav a:hover {
+        background-color: #64ffda;
+        color: #1a1a1a;
+        border-color: #64ffda;
+      }
 
-        .amount {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin: 1rem 0;
-        }
+      .hero {
+        background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+        color: #ffffff;
+        padding: 15px 20px;
+        text-align: center;
+        border-radius: 15px;
+        margin: 10px 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        border: 1px solid #444444;
+      }
 
-        #rzp-button1 {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            color: white;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
+      .hero h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: #64ffda;
+      }
 
-        #rzp-button1:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
+      .hero p {
+        font-size: 12px;
+        font-weight: 400;
+        max-width: 400px;
+        margin: 0 auto;
+        line-height: 1.3;
+        color: #b0b0b0;
+      }
 
-        .footer {
-            background: linear-gradient(to right, var(--text-color), #1a2634);
-            color: white;
-            text-align: center;
-            padding: 2.5rem;
-            margin-top: auto;
-        }
+      .main-content {
+        flex: 1;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      .payment-container {
+        background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+        border: 1px solid #444444;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        padding: 25px;
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+      }
+
+      .payment-header {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #555555;
+      }
+
+      .payment-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #64ffda;
+        margin-bottom: 8px;
+      }
+
+      .payment-subtitle {
+        color: #b0b0b0;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.4;
+      }
+
+      .payment-info {
+        background-color: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .course-info {
+        color: #b0b0b0;
+        font-size: 12px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .amount {
+        font-size: 32px;
+        font-weight: 700;
+        color: #64ffda;
+        margin: 15px 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .payment-provider {
+        color: #888888;
+        font-size: 11px;
+        font-weight: 400;
+        margin-top: 8px;
+      }
+
+      .payment-actions {
+        margin-bottom: 20px;
+      }
+
+      .pay-btn {
+        width: 100%;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 12px;
+        background-color: #64ffda;
+        color: #1a1a1a;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-family: "Quicksand", sans-serif;
+        margin-bottom: 12px;
+      }
+
+      .pay-btn:hover {
+        background-color: #4fd3b8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(100, 255, 218, 0.3);
+      }
+
+      .cancel-btn {
+        width: 100%;
+        padding: 10px 20px;
+        border: 1px solid #666666;
+        border-radius: 12px;
+        background-color: transparent;
+        color: #e0e0e0;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-family: "Quicksand", sans-serif;
+      }
+
+      .cancel-btn:hover {
+        background-color: #3d3d3d;
+        border-color: #888888;
+        text-decoration: none;
+        color: #e0e0e0;
+      }
+
+      .security-info {
+        background-color: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 15px;
+      }
+
+      .security-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 8px;
+        color: #4caf50;
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      .security-text {
+        color: #b0b0b0;
+        font-size: 11px;
+        line-height: 1.4;
+        font-weight: 400;
+      }
+
+      .payment-details {
+        background-color: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        text-align: left;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 12px;
+      }
+
+      .detail-row:last-child {
+        margin-bottom: 0;
+        padding-top: 8px;
+        border-top: 1px solid #555555;
+        font-weight: 600;
+        color: #64ffda;
+      }
+
+      .detail-label {
+        color: #b0b0b0;
+        font-weight: 500;
+      }
+
+      .detail-value {
+        color: #e0e0e0;
+        font-weight: 600;
+      }
+
+      footer {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        border-radius: 15px 15px 0 0;
+        font-weight: 500;
+        border-top: 1px solid #444444;
+        font-size: 12px;
+        margin-top: auto;
+      }
+
+      .alert {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        color: white;
+        min-width: 250px;
+        z-index: 1000;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .alert-success {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        border: 2px solid #4caf50;
+      }
+
+      .alert-error {
+        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        border: 2px solid #f44336;
+      }
+
+      .alert-close {
+        float: right;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 10px;
+        padding: 3px 6px;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+
+      .alert-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      /* Font Awesome Icons */
+      .fas {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .fa-credit-card:before {
+        content: "\f09d";
+      }
+      .fa-lock:before {
+        content: "\f023";
+      }
+      .fa-shield-alt:before {
+        content: "\f3ed";
+      }
+      .fa-times:before {
+        content: "\f00d";
+      }
+      .fa-check:before {
+        content: "\f00c";
+      }
+      .fa-exclamation:before {
+        content: "\f12a";
+      }
     </style>
-</head>
-<body>
-    <nav class="navbar">
-        <a href="/learner/home" class="logo">Jnana</a>
-    </nav>
+  </head>
 
-    <div class="container">
-        <h1>Course Payment</h1>
-        
-        <div class="payment-info">
-            <div class="amount">₹ [[${amount/100}]]</div>
-            <p>Complete your payment to access the course</p>
-        </div>
-
-        <button id="rzp-button1">
-            <i class="fas fa-lock"></i>
-            Pay Securely
-        </button>
+  <body>
+    <!-- Toast Container -->
+    <div th:if="${session.pass}" class="alert alert-success" id="successAlert">
+      <span th:text="${session.pass}">Success message</span>
+      <button class="alert-close" onclick="closeAlert('successAlert')">
+        &times;
+      </button>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 Jnana. All rights reserved.</p>
-    </footer>
+    <div th:if="${session.fail}" class="alert alert-error" id="errorAlert">
+      <span th:text="${session.fail}">Error message</span>
+      <button class="alert-close" onclick="closeAlert('errorAlert')">
+        &times;
+      </button>
+    </div>
 
+    <th:block th:text="${@generalService.removeMessage()}"></th:block>
+
+    <!-- Header -->
+    <header>
+      <a href="/learner/home" class="logo">Jnana</a>
+      <nav>
+        <a href="/learner/home">Dashboard</a>
+        <a href="/logout">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1>Course Payment</h1>
+      <p>Complete your payment to access the course content</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="payment-container">
+        <!-- Payment Header -->
+        <div class="payment-header">
+          <h2 class="payment-title">
+            <i class="fas fa-credit-card"></i>
+            Secure Payment
+          </h2>
+          <p class="payment-subtitle">
+            You're about to enroll in this course. Complete the payment to get
+            instant access.
+          </p>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="payment-details">
+          <div class="detail-row">
+            <span class="detail-label">Course:</span>
+            <span class="detail-value" th:text="${course.title ?: 'Course Name'}"
+              >Course Name</span
+            >
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Student:</span>
+            <span class="detail-value" th:text="${session.learner.name}"
+              >Student Name</span
+            >
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value" th:text="${session.learner.email}"
+              >student@email.com</span
+            >
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Total Amount:</span>
+            <span class="detail-value" th:text="'₹' + ${amount/100}">₹999</span>
+          </div>
+        </div>
+
+        <!-- Payment Info -->
+        <div class="payment-info">
+          <div class="course-info">Course Enrollment Fee</div>
+          <div class="amount" th:text="'₹' + ${amount/100}">₹999</div>
+          <div class="payment-provider">Secure payment powered by Razorpay</div>
+        </div>
+
+        <!-- Payment Actions -->
+        <div class="payment-actions">
+          <button id="rzp-button1" class="pay-btn">
+            <i class="fas fa-lock"></i>
+            <span>Pay Securely</span>
+          </button>
+
+          <a href="/learner/view-courses" class="cancel-btn">
+            <i class="fas fa-times"></i>
+            <span>Cancel Payment</span>
+          </a>
+        </div>
+
+        <!-- Security Info -->
+        <div class="security-info">
+          <div class="security-header">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure & Encrypted</span>
+          </div>
+          <div class="security-text">
+            Your payment information is protected with industry-standard
+            encryption. We never store your card details on our servers.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>&copy; 2025 Jnana. All rights reserved.</footer>
+
+    <!-- Razorpay Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script th:inline="javascript">
-        var options = {
-            "key": [[${key}]], 
-            "amount": [[${amount}]], 
-            "currency": [[${currency}]],
-            "name": "Jnana E-Learning",
-            "description": "Course Enrollment",
-            "image": "https://yogastudies.org/wp-content/uploads/jnana.jpg",
-            "order_id": [[${orderId}]],
-            "callback_url": [[${path}]],
-            "prefill": {
-                "name": [[${session.learner.name}]],
-                "email": [[${session.learner.email}]],
-                "contact": [[${session.learner.mobile}]]
-            },
-            "theme": {
-                "color": "#4CAF50"
-            }
-        };
-        var rzp1 = new Razorpay(options);
-        document.getElementById('rzp-button1').onclick = function(e){
-            rzp1.open();
-            e.preventDefault();
+      // Alert functions
+      function closeAlert(alertId) {
+        document.getElementById(alertId).style.display = "none";
+      }
+
+      setTimeout(function () {
+        var successAlert = document.getElementById("successAlert");
+        var errorAlert = document.getElementById("errorAlert");
+
+        if (successAlert) {
+          successAlert.style.display = "none";
         }
+        if (errorAlert) {
+          errorAlert.style.display = "none";
+        }
+      }, 5000);
+
+      // Razorpay Payment Integration
+      var options = {
+        key: /*[[${key}]]*/ "rzp_test_key",
+        amount: /*[[${amount}]]*/ 50000,
+        currency: "INR",
+        name: "Jnana E-Learning",
+        description: /*[[${courseName}]]*/ "Course Enrollment",
+        image: "/images/logo.png",
+        order_id: /*[[${orderId}]]*/ "order_id",
+        handler: function (response) {
+          // Payment successful
+          var form = document.createElement("form");
+          form.method = "POST";
+          form.action = /*[[${path}]]*/ "/learner/payment-success";
+
+          var paymentId = document.createElement("input");
+          paymentId.type = "hidden";
+          paymentId.name = "razorpay_payment_id";
+          paymentId.value = response.razorpay_payment_id;
+
+          var orderId = document.createElement("input");
+          orderId.type = "hidden";
+          orderId.name = "razorpay_order_id";
+          orderId.value = response.razorpay_order_id;
+
+          var signature = document.createElement("input");
+          signature.type = "hidden";
+          signature.name = "razorpay_signature";
+          signature.value = response.razorpay_signature;
+
+          var courseIdInput = document.createElement("input");
+          courseIdInput.type = "hidden";
+          courseIdInput.name = "courseId";
+          courseIdInput.value = /*[[${courseId}]]*/ "";
+
+          form.appendChild(paymentId);
+          form.appendChild(orderId);
+          form.appendChild(signature);
+          form.appendChild(courseIdInput);
+
+          document.body.appendChild(form);
+          form.submit();
+        },
+        prefill: {
+          name: /*[[${session.learner.name}]]*/ "Student Name",
+          email: /*[[${session.learner.email}]]*/ "student@email.com",
+          contact: /*[[${session.learner.mobile}]]*/ "9999999999",
+        },
+        notes: {
+          course_id: /*[[${courseId}]]*/ "",
+          student_id: /*[[${session.learner.id}]]*/ "",
+        },
+        theme: {
+          color: "#64ffda",
+        },
+        modal: {
+          ondismiss: function () {
+            // Payment cancelled
+            console.log("Payment cancelled by user");
+          },
+        },
+      };
+
+      var rzp1 = new Razorpay(options);
+
+      rzp1.on("payment.failed", function (response) {
+        // Payment failed
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/learner/payment-failed";
+
+        var errorCode = document.createElement("input");
+        errorCode.type = "hidden";
+        errorCode.name = "error_code";
+        errorCode.value = response.error.code;
+
+        var errorDescription = document.createElement("input");
+        errorDescription.type = "hidden";
+        errorDescription.name = "error_description";
+        errorDescription.value = response.error.description;
+
+        var courseIdInput = document.createElement("input");
+        courseIdInput.type = "hidden";
+        courseIdInput.name = "courseId";
+        courseIdInput.value = /*[[${courseId}]]*/ "";
+
+        form.appendChild(errorCode);
+        form.appendChild(errorDescription);
+        form.appendChild(courseIdInput);
+
+        document.body.appendChild(form);
+        form.submit();
+      });
+
+      document.getElementById("rzp-button1").onclick = function (e) {
+        e.preventDefault();
+
+        // Show loading state
+        var btn = document.getElementById("rzp-button1");
+        var originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-lock"></i><span>Processing...</span>';
+        btn.disabled = true;
+
+        // Open Razorpay checkout
+        rzp1.open();
+
+        // Reset button after a delay (in case user cancels)
+        setTimeout(function () {
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+        }, 3000);
+      };
     </script>
-</body>
+  </body>
 </html>

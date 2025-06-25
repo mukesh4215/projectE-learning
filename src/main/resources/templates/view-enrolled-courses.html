@@ -1,206 +1,627 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enrolled Courses - Jnana</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="https://yogastudies.org/wp-content/uploads/jnana.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --text-color: #2c3e50;
-            --shadow-color: rgba(0,0,0,0.1);
-            --error-color: #f44336;
-            --bg-light: #f5f7fa;
-            --accent-color: #ff5722;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+      body {
+        font-family: "Quicksand", sans-serif;
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-        body {
-            background: var(--bg-light);
-            min-height: 100vh;
-            padding-top: 100px;
-            display: flex;
-            flex-direction: column;
-        }
+      header {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1.2rem 5%;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .logo {
+        font-size: 20px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #64ffda;
+        letter-spacing: 1px;
+      }
 
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
-            letter-spacing: 1px;
-        }
+      .logo:hover {
+        color: #4fd3b8;
+      }
 
-        .container {
-            margin: 2rem auto;
-            padding: 2.5rem;
-            width: 90%;
-            max-width: 1200px;
-        }
+      nav a {
+        background-color: #3d3d3d;
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 12px;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 13px;
+        border: 2px solid #555555;
+        transition: all 0.3s ease;
+      }
 
-        h1 {
-            text-align: center;
-            color: var(--text-color);
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-        }
+      nav a:hover {
+        background-color: #64ffda;
+        color: #1a1a1a;
+        border-color: #64ffda;
+      }
 
-        .course-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
+      .hero {
+        background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+        color: #ffffff;
+        padding: 15px 20px;
+        text-align: center;
+        border-radius: 15px;
+        margin: 10px 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        border: 1px solid #444444;
+      }
 
-        .course-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 30px var(--shadow-color);
-            transition: transform 0.3s ease;
-            animation: slideUp 0.5s ease-out;
-        }
+      .hero h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: #64ffda;
+      }
 
-        .course-card:hover {
-            transform: translateY(-5px);
-        }
+      .hero p {
+        font-size: 12px;
+        font-weight: 400;
+        max-width: 400px;
+        margin: 0 auto;
+        line-height: 1.3;
+        color: #b0b0b0;
+      }
 
-        .course-title {
-            color: var(--text-color);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
+      .main-content {
+        flex: 1;
+        padding: 15px 20px;
+        overflow-y: auto;
+      }
 
-        .course-description {
-            color: #666;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
+      .courses-container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
 
-        .btn-group {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
+      .courses-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
 
-        .btn {
-            padding: 0.8rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            color: white;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
+      .course-card {
+        background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+        border: 1px solid #444444;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        padding: 18px;
+        width: 320px;
+        transition: all 0.3s ease;
+      }
 
-        .btn-sections {
-            background: var(--primary-color);
-        }
+      .course-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        border-color: #64ffda;
+      }
 
-        .btn-quiz {
-            background: var(--secondary-color);
-        }
+      .course-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #555555;
+      }
 
-        .btn-certificate {
-            background: var(--accent-color);
-        }
+      .course-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #64ffda;
+        margin-bottom: 8px;
+        line-height: 1.3;
+        flex: 1;
+        margin-right: 10px;
+      }
 
-        .btn-back {
-            background: var(--text-color);
-        }
+      .enrollment-badge {
+        background-color: #4caf50;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+      }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
+      .enrollment-badge.completed {
+        background-color: #ff9800;
+      }
 
-        .footer {
-            background: linear-gradient(to right, var(--text-color), #1a2634);
-            color: white;
-            text-align: center;
-            padding: 2.5rem;
-            margin-top: auto;
-        }
+      .course-description {
+        color: #b0b0b0;
+        font-size: 12px;
+        line-height: 1.4;
+        font-weight: 400;
+        margin-bottom: 15px;
+      }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      .course-progress {
+        background-color: #3d3d3d;
+        border: 1px solid #555555;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 15px;
+      }
+
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .progress-label {
+        color: #e0e0e0;
+        font-weight: 500;
+        font-size: 11px;
+      }
+
+      .progress-percentage {
+        background: #64ffda;
+        color: #1a1a1a;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: #555555;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #64ffda;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+
+      .progress-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #888888;
+      }
+
+      .course-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .btn {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        font-family: "Quicksand", sans-serif;
+        flex: 1;
+      }
+
+      .btn-sections {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-sections:hover {
+        background-color: #45a049;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: white;
+      }
+
+      .btn-quiz {
+        background-color: #64ffda;
+        color: #1a1a1a;
+      }
+
+      .btn-quiz:hover {
+        background-color: #4fd3b8;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: #1a1a1a;
+      }
+
+      .btn-certificate {
+        background-color: #ff9800;
+        color: white;
+      }
+
+      .btn-certificate:hover {
+        background-color: #f57c00;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: white;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #b0b0b0;
+      }
+
+      .empty-state i {
+        font-size: 40px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+        color: #888888;
+      }
+
+      .empty-state h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: #64ffda;
+        font-weight: 600;
+      }
+
+      .empty-state p {
+        font-size: 13px;
+        line-height: 1.4;
+        font-weight: 400;
+        margin-bottom: 20px;
+      }
+
+      .empty-action {
+        background-color: #64ffda;
+        color: #1a1a1a;
+        padding: 10px 20px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .empty-action:hover {
+        background-color: #4fd3b8;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: #1a1a1a;
+      }
+
+      .back-section {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #444444;
+      }
+
+      .back-btn {
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: "Quicksand", sans-serif;
+      }
+
+      .back-btn:hover {
+        background-color: #5a6268;
+        transform: translateY(-1px);
+        text-decoration: none;
+        color: white;
+      }
+
+      footer {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        border-radius: 15px 15px 0 0;
+        font-weight: 500;
+        border-top: 1px solid #444444;
+        font-size: 12px;
+        margin-top: auto;
+      }
+
+      .alert {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        color: white;
+        min-width: 250px;
+        z-index: 1000;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .alert-success {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        border: 2px solid #4caf50;
+      }
+
+      .alert-error {
+        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        border: 2px solid #f44336;
+      }
+
+      .alert-close {
+        float: right;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 10px;
+        padding: 3px 6px;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+
+      .alert-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      .fas {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+      }
+
+      .fa-graduation-cap:before {
+        content: "\f19d";
+      }
+      .fa-check-circle:before {
+        content: "\f058";
+      }
+      .fa-book-reader:before {
+        content: "\f5da";
+      }
+      .fa-question-circle:before {
+        content: "\f059";
+      }
+      .fa-certificate:before {
+        content: "\f0a3";
+      }
+      .fa-arrow-left:before {
+        content: "\f060";
+      }
+      .fa-book-open:before {
+        content: "\f518";
+      }
+      .fa-plus:before {
+        content: "\f067";
+      }
+      .fa-check:before {
+        content: "\f00c";
+      }
+      .fa-exclamation:before {
+        content: "\f12a";
+      }
     </style>
-</head>
-<body>
-    <nav class="navbar">
-        <a href="/learner/home" class="logo">Jnana</a>
-    </nav>
+  </head>
 
-    <div class="container">
-        <h1>My Enrolled Courses</h1>
-
-        <div class="course-grid">
-            <div class="course-card" th:each="enrolledCourse:${enrolledCourses}">
-                <h2 class="course-title" th:text="${enrolledCourse.course.title}"></h2>
-                <p class="course-description" th:text="${enrolledCourse.course.description}"></p>
-                
-                <div class="btn-group">
-                    <a th:href="'/learner/view-enrolled-sections/'+${enrolledCourse.id}" class="btn btn-sections">
-                        <i class="fas fa-book-reader"></i>
-                        View Sections
-                    </a>
-                    <a href="#" class="btn btn-quiz">
-                        <i class="fas fa-question-circle"></i>
-                        Take Quiz
-                    </a>
-                    <a href="#" class="btn btn-certificate">
-                        <i class="fas fa-certificate"></i>
-                        Certificate
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div style="text-align: center;">
-            <a href="/learner/home" class="btn btn-back">
-                <i class="fas fa-arrow-left"></i>
-                Back
-            </a>
-        </div>
+  <body>
+    <!-- Toast Container -->
+    <div th:if="${session.pass}" class="alert alert-success" id="successAlert">
+      <span th:text="${session.pass}">Success message</span>
+      <button class="alert-close" onclick="closeAlert('successAlert')">
+        &times;
+      </button>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 Jnana. All rights reserved.</p>
-    </footer>
-</body>
+    <div th:if="${session.fail}" class="alert alert-error" id="errorAlert">
+      <span th:text="${session.fail}">Error message</span>
+      <button class="alert-close" onclick="closeAlert('errorAlert')">
+        &times;
+      </button>
+    </div>
+
+    <th:block th:text="${@generalService.removeMessage()}"></th:block>
+
+    <!-- Header -->
+    <header>
+      <a href="/learner/home" class="logo">Jnana</a>
+      <nav>
+        <a href="/learner/home">Dashboard</a>
+        <a href="/logout">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1>My Enrolled Courses</h1>
+      <p>Continue your learning journey and track your progress</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="courses-container">
+        <!-- Courses Grid -->
+        <div
+          class="courses-grid"
+          th:if="${enrolledCourses != null and !enrolledCourses.empty}"
+        >
+          <div class="course-card" th:each="enrollment : ${enrolledCourses}">
+            <!-- Course Header -->
+            <div class="course-header">
+              <h3 class="course-title" th:text="${enrollment.course.title}">
+                Course Title
+              </h3>
+              <div
+                class="enrollment-badge"
+                th:classappend="${enrollment.finalQuizCompleted} ? 'completed' : ''"
+              >
+                <i
+                  class="fas fa-check-circle"
+                  th:if="${enrollment.finalQuizCompleted}"
+                ></i>
+                <i
+                  class="fas fa-graduation-cap"
+                  th:unless="${enrollment.finalQuizCompleted}"
+                ></i>
+                <span
+                  th:text="${enrollment.finalQuizCompleted} ? 'Completed' : 'In Progress'"
+                  >In Progress</span
+                >
+              </div>
+            </div>
+
+            <!-- Course Description -->
+            <p
+              class="course-description"
+              th:text="${enrollment.course.description}"
+            >
+              Course Description
+            </p>
+
+            <div class="course-actions">
+              <a
+                th:href="@{'/learner/view-enrolled-sections/' + ${enrollment.course.id}}"
+                class="btn btn-sections"
+              >
+                <i class="fas fa-book-reader"></i>
+                <span>View Sections</span>
+              </a>
+
+              <a
+                th:href="@{'/learner/course/quiz/' + ${enrollment.course.id}}"
+                class="btn btn-quiz"
+                th:if="${@sectionRepository.findByCourse(enrollment.course).size() > 0}"
+              >
+                <i class="fas fa-question-circle"></i>
+                <span>Take Quiz</span>
+              </a>
+
+              <button
+                class="btn btn-quiz"
+                disabled
+                th:if="${@sectionRepository.findByCourse(enrollment.course).size() == 0}"
+              >
+                <i class="fas fa-question-circle"></i>
+                <span>Quiz Unavailable</span>
+              </button>
+
+              <a
+                th:if="${enrollment.finalQuizCompleted}"
+                th:href="@{'/learner/certificate/' + ${enrollment.id}}"
+                class="btn btn-certificate"
+              >
+                <i class="fas fa-certificate"></i>
+                <span>Certificate</span>
+              </a>
+
+              <button
+                th:unless="${enrollment.finalQuizCompleted}"
+                class="btn btn-certificate"
+                disabled
+              >
+                <i class="fas fa-certificate"></i>
+                <span>Complete Course</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Back Section -->
+        <div class="back-section">
+          <a href="/learner/home" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>&copy; 2025 Jnana. All rights reserved.</footer>
+
+    <script>
+      function closeAlert(alertId) {
+        document.getElementById(alertId).style.display = "none";
+      }
+
+      setTimeout(function () {
+        var successAlert = document.getElementById("successAlert");
+        var errorAlert = document.getElementById("errorAlert");
+
+        if (successAlert) {
+          successAlert.style.display = "none";
+        }
+        if (errorAlert) {
+          errorAlert.style.display = "none";
+        }
+      }, 5000);
+    </script>
+  </body>
 </html>
