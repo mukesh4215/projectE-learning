@@ -1,0 +1,16 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  build:
+    commands:
+      - mvn clean package -DskipTests
+artifacts:
+  files:
+    - target/app.jar
+    - appspec.yml
+    - scripts/**/*
+cache:
+  paths:
+    - /root/.m2/**/*

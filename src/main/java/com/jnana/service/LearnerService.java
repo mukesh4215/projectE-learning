@@ -93,7 +93,7 @@ public class LearnerService {
                 return "redirect:/learner/home";
             } else {
                 model.addAttribute("courses", courses);
-                return "avaiable-courses.html";
+                return "available-courses.html";
             }
         } else {
             session.setAttribute("fail", "Invalid Session, Login First");
