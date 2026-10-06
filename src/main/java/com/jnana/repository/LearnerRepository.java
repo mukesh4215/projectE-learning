@@ -14,5 +14,7 @@ public interface LearnerRepository extends JpaRepository<Learner, Long> {
 	
 	Learner findByEmail(String email);
 	
+	Learner findByMobile(long mobile);
+	
 	List<Learner> findByEnrolledCoursesIn(List<EnrolledCourse> enrolledCourses);
 }

@@ -66,4 +66,41 @@ public class GeneralController {
 		return generalService.logout(session);
 	}
 
+	// ==================== FORGOT PASSWORD ENDPOINTS ====================
+
+	@GetMapping("/forgot-password")
+	public String loadForgotPassword() {
+		return "forgot-password.html";
+	}
+
+	@PostMapping("/forgot-password")
+	public String processForgotPassword(@RequestParam long mobile, HttpSession session) {
+		return generalService.processForgotPassword(mobile, session);
+	}
+
+	@GetMapping("/reset-password-otp")
+	public String loadResetPasswordOtp() {
+		return "reset-password-otp.html";
+	}
+
+	@PostMapping("/submit-reset-otp")
+	public String submitResetOtp(@RequestParam int otp, HttpSession session) {
+		return generalService.confirmResetOtp(otp, session);
+	}
+
+	@GetMapping("/resend-reset-otp")
+	public String resendResetOtp(HttpSession session) {
+		return generalService.resendResetOtp(session);
+	}
+
+	@GetMapping("/reset-password")
+	public String loadResetPassword(HttpSession session) {
+		return generalService.loadResetPassword(session);
+	}
+
+	@PostMapping("/reset-password")
+	public String processResetPassword(@RequestParam String password, @RequestParam String confirmPassword, HttpSession session) {
+		return generalService.processResetPassword(password, confirmPassword, session);
+	}
+
 }
