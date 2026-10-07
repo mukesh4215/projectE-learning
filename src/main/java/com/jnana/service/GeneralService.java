@@ -184,34 +184,100 @@ public class GeneralService {
 
 	// ==================== FORGOT PASSWORD MODULE ====================
 
+	private Learner findLearner(String input) {
+		if (input == null || input.trim().isEmpty()) return null;
+		String trimmed = input.trim();
+
+		// 1. Try finding by email
+		if (trimmed.contains("@")) {
+			Learner byEmail = learnerRepository.findByEmail(trimmed);
+			if (byEmail != null) return byEmail;
+		}
+
+		// 2. Extract digits for mobile lookup
+		String digitsOnly = trimmed.replaceAll("[^0-9]", "");
+		if (digitsOnly.length() > 10) {
+			digitsOnly = digitsOnly.substring(digitsOnly.length() - 10);
+		}
+
+		// 3. Try direct query
+		if (!digitsOnly.isEmpty()) {
+			try {
+				Long mobileNum = Long.parseLong(digitsOnly);
+				Learner byMobile = learnerRepository.findByMobile(mobileNum);
+				if (byMobile != null) return byMobile;
+			} catch (Exception ignored) {}
+		}
+
+		// 4. Fetch all from repository/database and verify numbers in Java
+		try {
+			for (Learner l : learnerRepository.findAll()) {
+				if (l.getEmail() != null && l.getEmail().equalsIgnoreCase(trimmed)) {
+					return l;
+				}
+				if (l.getMobile() != null && !digitsOnly.isEmpty()) {
+					String lMobileStr = String.valueOf(l.getMobile());
+					if (lMobileStr.equals(digitsOnly) || lMobileStr.endsWith(digitsOnly)) {
+						return l;
+					}
+				}
+			}
+		} catch (Exception ignored) {}
+
+		return null;
+	}
+
+	private Tutor findTutor(String input) {
+		if (input == null || input.trim().isEmpty()) return null;
+		String trimmed = input.trim();
+
+		// 1. Try finding by email
+		if (trimmed.contains("@")) {
+			Tutor byEmail = tutorRepository.findByEmail(trimmed);
+			if (byEmail != null) return byEmail;
+		}
+
+		// 2. Extract digits for mobile lookup
+		String digitsOnly = trimmed.replaceAll("[^0-9]", "");
+		if (digitsOnly.length() > 10) {
+			digitsOnly = digitsOnly.substring(digitsOnly.length() - 10);
+		}
+
+		// 3. Try direct query
+		if (!digitsOnly.isEmpty()) {
+			try {
+				Long mobileNum = Long.parseLong(digitsOnly);
+				Tutor byMobile = tutorRepository.findByMobile(mobileNum);
+				if (byMobile != null) return byMobile;
+			} catch (Exception ignored) {}
+		}
+
+		// 4. Fetch all from repository/database and verify numbers in Java
+		try {
+			for (Tutor t : tutorRepository.findAll()) {
+				if (t.getEmail() != null && t.getEmail().equalsIgnoreCase(trimmed)) {
+					return t;
+				}
+				if (t.getMobile() != null && !digitsOnly.isEmpty()) {
+					String tMobileStr = String.valueOf(t.getMobile());
+					if (tMobileStr.equals(digitsOnly) || tMobileStr.endsWith(digitsOnly)) {
+						return t;
+					}
+				}
+			}
+		} catch (Exception ignored) {}
+
+		return null;
+	}
+
 	public String processForgotPassword(String mobileInput, HttpSession session) {
 		if (mobileInput == null || mobileInput.trim().isEmpty()) {
 			session.setAttribute("fail", "Please enter a valid Mobile Number or Email.");
 			return "redirect:/forgot-password";
 		}
 
-		String trimmed = mobileInput.trim();
-		Learner learner = null;
-		Tutor tutor = null;
-
-		if (trimmed.contains("@")) {
-			learner = learnerRepository.findByEmail(trimmed);
-			tutor = tutorRepository.findByEmail(trimmed);
-		} else {
-			String digitsOnly = trimmed.replaceAll("[^0-9]", "");
-			if (!digitsOnly.isEmpty()) {
-				if (digitsOnly.length() > 10) {
-					digitsOnly = digitsOnly.substring(digitsOnly.length() - 10);
-				}
-				try {
-					Long mobileNumber = Long.parseLong(digitsOnly);
-					learner = learnerRepository.findByMobile(mobileNumber);
-					tutor = tutorRepository.findByMobile(mobileNumber);
-				} catch (NumberFormatException e) {
-					// Invalid number format
-				}
-			}
-		}
+		Learner learner = findLearner(mobileInput);
+		Tutor tutor = learner == null ? findTutor(mobileInput) : null;
 
 		if (learner == null && tutor == null) {
 			session.setAttribute("fail", "Mobile Number / Email Not Registered!");
@@ -291,10 +357,10 @@ public class GeneralService {
 		AccountType accountType = "LEARNER".equals(accountTypeStr) ? AccountType.LEARNER : AccountType.TUTOR;
 
 		if (accountType == AccountType.LEARNER) {
-			Learner l = learnerRepository.findByMobile(mobile);
+			Learner l = findLearner(String.valueOf(mobile));
 			if (l != null) { userEmail = l.getEmail(); userName = l.getName(); }
 		} else {
-			Tutor t = tutorRepository.findByMobile(mobile);
+			Tutor t = findTutor(String.valueOf(mobile));
 			if (t != null) { userEmail = t.getEmail(); userName = t.getName(); }
 		}
 
@@ -343,13 +409,13 @@ public class GeneralService {
 		String encodedPassword = encoder.encode(password);
 
 		if ("LEARNER".equals(accountTypeStr)) {
-			Learner learner = learnerRepository.findByMobile(mobile);
+			Learner learner = findLearner(String.valueOf(mobile));
 			if (learner != null) {
 				learner.setPassword(encodedPassword);
 				learnerRepository.save(learner);
 			}
 		} else {
-			Tutor tutor = tutorRepository.findByMobile(mobile);
+			Tutor tutor = findTutor(String.valueOf(mobile));
 			if (tutor != null) {
 				tutor.setPassword(encodedPassword);
 				tutorRepository.save(tutor);

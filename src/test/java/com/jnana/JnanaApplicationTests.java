@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -99,10 +102,30 @@ class JnanaApplicationTests {
 	}
 
 	@Test
+	void testProcessForgotPasswordFallbackFindAll() {
+		MockHttpSession session = new MockHttpSession();
+		Learner learner = new Learner();
+		learner.setName("Test Learner");
+		learner.setEmail("learner@test.com");
+		learner.setMobile(9876543210L);
+
+		when(learnerRepository.findByMobile(9876543210L)).thenReturn(null);
+		when(learnerRepository.findAll()).thenReturn(List.of(learner));
+
+		String result = generalService.processForgotPassword("9876543210", session);
+
+		assertEquals("redirect:/reset-password-otp", result);
+		assertNotNull(session.getAttribute("resetOtp"));
+		assertEquals(9876543210L, session.getAttribute("resetMobile"));
+	}
+
+	@Test
 	void testProcessForgotPasswordNotFound() {
 		MockHttpSession session = new MockHttpSession();
 		when(learnerRepository.findByMobile(9876543210L)).thenReturn(null);
+		when(learnerRepository.findAll()).thenReturn(Collections.emptyList());
 		when(tutorRepository.findByMobile(9876543210L)).thenReturn(null);
+		when(tutorRepository.findAll()).thenReturn(Collections.emptyList());
 
 		String result = generalService.processForgotPassword("9876543210", session);
 
