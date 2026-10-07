@@ -74,7 +74,7 @@ public class GeneralController {
 	}
 
 	@PostMapping("/forgot-password")
-	public String processForgotPassword(@RequestParam long mobile, HttpSession session) {
+	public String processForgotPassword(@RequestParam String mobile, HttpSession session) {
 		return generalService.processForgotPassword(mobile, session);
 	}
 

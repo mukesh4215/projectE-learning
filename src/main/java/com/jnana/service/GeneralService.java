@@ -184,27 +184,53 @@ public class GeneralService {
 
 	// ==================== FORGOT PASSWORD MODULE ====================
 
-	public String processForgotPassword(long mobile, HttpSession session) {
-		Learner learner = learnerRepository.findByMobile(mobile);
-		Tutor tutor = tutorRepository.findByMobile(mobile);
+	public String processForgotPassword(String mobileInput, HttpSession session) {
+		if (mobileInput == null || mobileInput.trim().isEmpty()) {
+			session.setAttribute("fail", "Please enter a valid Mobile Number or Email.");
+			return "redirect:/forgot-password";
+		}
+
+		String trimmed = mobileInput.trim();
+		Learner learner = null;
+		Tutor tutor = null;
+
+		if (trimmed.contains("@")) {
+			learner = learnerRepository.findByEmail(trimmed);
+			tutor = tutorRepository.findByEmail(trimmed);
+		} else {
+			String digitsOnly = trimmed.replaceAll("[^0-9]", "");
+			if (!digitsOnly.isEmpty()) {
+				if (digitsOnly.length() > 10) {
+					digitsOnly = digitsOnly.substring(digitsOnly.length() - 10);
+				}
+				try {
+					Long mobileNumber = Long.parseLong(digitsOnly);
+					learner = learnerRepository.findByMobile(mobileNumber);
+					tutor = tutorRepository.findByMobile(mobileNumber);
+				} catch (NumberFormatException e) {
+					// Invalid number format
+				}
+			}
+		}
 
 		if (learner == null && tutor == null) {
-			session.setAttribute("fail", "Mobile Number Not Registered!");
+			session.setAttribute("fail", "Mobile Number / Email Not Registered!");
 			return "redirect:/forgot-password";
 		}
 
 		String userEmail = learner != null ? learner.getEmail() : tutor.getEmail();
 		String userName = learner != null ? learner.getName() : tutor.getName();
 		AccountType accountType = learner != null ? AccountType.LEARNER : AccountType.TUTOR;
+		Long registeredMobile = learner != null ? learner.getMobile() : tutor.getMobile();
 
 		int resetOtp = new Random().nextInt(100000, 1000000);
 		session.setAttribute("resetOtp", resetOtp);
-		session.setAttribute("resetMobile", mobile);
+		session.setAttribute("resetMobile", registeredMobile);
 		session.setAttribute("resetAccountType", accountType.name());
 		session.setAttribute("resetTime", LocalDateTime.now());
 
 		System.out.println("==================================================");
-		System.out.println("FORGOT PASSWORD OTP for Mobile " + mobile + " (" + userName + "): " + resetOtp);
+		System.out.println("FORGOT PASSWORD OTP for " + userEmail + " (" + userName + "): " + resetOtp);
 		System.out.println("==================================================");
 
 		UserDto tempDto = new UserDto();
@@ -213,7 +239,7 @@ public class GeneralService {
 		tempDto.setType(accountType);
 		sendEmail(resetOtp, tempDto);
 
-		session.setAttribute("pass", "OTP sent successfully to your registered mobile / email.");
+		session.setAttribute("pass", "OTP sent successfully to your registered email (" + userEmail + ").");
 		return "redirect:/reset-password-otp";
 	}
 
